@@ -20,8 +20,6 @@
 #include "DOM/XMLParser.h"
 #include "fsm/FSMBase.h"
 
-using namespace std;
-
 struct NodeEvent 
 {
   const char *nsUri;
@@ -40,12 +38,12 @@ class SchematicParser : public XMLParser, public FSM::FSMBase
 protected:
   //TODO: consider using "TRIE" like data-structure instead of hash_map
   // hash (nodeName,nsuri) to eventId
-  hash_map<string,int> _nodeEventMap;
+  std::hash_map<std::string,int> _nodeEventMap;
 
 public:
   virtual ~SchematicParser() { }
   
-  void parseXmlFile(string filePath);
+  void parseXmlFile(std::string filePath);
   
   void onElementStart(void *userData, 
                                const char *nsUri, 

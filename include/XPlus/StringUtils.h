@@ -1,6 +1,7 @@
 // This file is part of XmlPlus package
 // 
 // Copyright (C)   2010-2013 Satya Prakash Tripathi
+// Copyright (C)   2017-2018 Akamai Technologies
 //
 //
 // This program is free software: you can redistribute it and/or modify
@@ -25,6 +26,7 @@
 #include <iostream>
 
 #include "XPlus/Exception.h"
+#include "XPlus/UString.h"
 
 using namespace std;
 
@@ -41,6 +43,10 @@ namespace XPlus
     return oss.str();
   }
 
+  template <> string toString (const bool& b);
+  template <> string toString (const string& b);
+  template <> string toString (const UString& b);
+
   template <class T> T fromString(const string& s)
   {
     T result;
@@ -49,5 +55,8 @@ namespace XPlus
     return result;
   }
 
+  template <> bool fromString<bool>(const string& s);
+  template <> string fromString<string>(const string& s);
+  template <> UString fromString<UString>(const string& s);
 }
 #endif

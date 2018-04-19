@@ -26,7 +26,7 @@ template<class T>
 class Stack 
 {
   private:
-    list<T> _list;
+    std::list<T> _list;
   
   public:
     

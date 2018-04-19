@@ -37,17 +37,14 @@
 #include "XSD/Facets.h"
 #include "XSD/Sampler.h"
 
-using namespace std;
-using namespace XPlus;
-
 namespace XMLSchema 
 {
 
   //fwd-declarations
   class TElement;
   class TDocument;
-  typedef AutoPtr<TElement> TElementPtr;
-  typedef AutoPtr<TDocument> TDocumentPtr;
+  typedef XPlus::AutoPtr<TElement> TElementPtr;
+  typedef XPlus::AutoPtr<TDocument> TDocumentPtr;
   typedef TElement* TElementP;
   typedef TDocument* TDocumentP;
 
@@ -65,11 +62,11 @@ namespace XMLSchema
 
       virtual ~SimpleTypeUnionTmpl() {}
 
-      inline DOMString value() {
+      inline DOM::DOMString value() {
         return anySimpleType::stringValue();
       }
 
-      bool checkValue(DOMString val)
+      bool checkValue(DOM::DOMString val)
       {
         bool valid = false;    
         for(unsigned int i=0; i<_unionMembers.size(); i++)
@@ -82,7 +79,7 @@ namespace XMLSchema
         return valid;
       }
 
-      int checkValueForIndex(DOMString val)
+      int checkValueForIndex(DOM::DOMString val)
       {
         bool valid = false;    
         for(int i=0; i<(int)_unionMembers.size(); i++)
@@ -96,7 +93,7 @@ namespace XMLSchema
       }
 
 
-      virtual void stringValue(DOMString val)
+      virtual void stringValue(DOM::DOMString val)
       {
         int idx = checkValueForIndex(val);
         if(idx == -1)
@@ -110,10 +107,10 @@ namespace XMLSchema
         anySimpleType::stringValue(val);
       }
 
-      virtual DOMString sampleValue() 
+      virtual DOM::DOMString sampleValue() 
       {
         if(isEnumerationCFacetSet()) {
-          vector<DOMString> enumStrings = _enumerationCFacet.value();
+          std::vector<DOM::DOMString> enumStrings = _enumerationCFacet.value();
           return Sampler::getRandomSample(enumStrings);
         }
 
@@ -123,7 +120,7 @@ namespace XMLSchema
 
       void setValueFromCreatedTextNodes()
       {
-        DOMString value = "";
+        DOM::DOMString value = "";
         for(unsigned int i=0; i<_textNodes.size(); i++) {
           value += *_textNodes.at(i)->getNodeValue();
         }
@@ -188,7 +185,7 @@ namespace XMLSchema
       protected:
 
       int _idxSelMember;
-      List<AutoPtr<anySimpleType> > _unionMembers;
+      XPlus::List<XPlus::AutoPtr<anySimpleType> > _unionMembers;
     };
 
   } // end namespace Types 

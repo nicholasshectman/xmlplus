@@ -23,11 +23,10 @@
 #include <list>
 #include "Exception.h"
 
-using namespace std;
 namespace XPlus
 {
   template<class T>
-  class List : public list<T> 
+  class List : public std::list<T> 
   {
     public:
 
@@ -38,7 +37,7 @@ namespace XPlus
         }
 
         unsigned int i=0;
-        typename list<T>::const_iterator it = this->begin();
+        typename std::list<T>::const_iterator it = this->begin();
         for(; it != this->end(); ++it, ++i) 
         {
           if(i==idx) {
@@ -57,7 +56,7 @@ namespace XPlus
         }
 
         unsigned int i=0;
-        typename list<T>::iterator it = this->begin();
+        typename std::list<T>::iterator it = this->begin();
         for(; it != this->end(); ++it, ++i) 
         {
           if(i==idx) {
@@ -70,12 +69,12 @@ namespace XPlus
       
       T& back() 
       {
-        return list<T>::back();
+        return std::list<T>::back();
       }
       
       const T& back() const
       {
-        return list<T>::back();
+        return std::list<T>::back();
       }
 
     protected:

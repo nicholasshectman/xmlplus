@@ -58,11 +58,11 @@
         <boundFacetSuffix>DateTime</boundFacetSuffix>
         <code>
     static DOM::DOMString typeToString(XPlus::Time val) {
-      return DateTimeUtils::formatXsdTime(val); 
+      return XPlus::DateTimeUtils::formatXsdTime(val); 
     }
 
     static XPlus::Time stringToType(DOM::DOMString strVal) {
-       return DateTimeUtils::parseXsdTime(strVal);
+       return XPlus::DateTimeUtils::parseXsdTime(strVal);
     }
         </code>
       </impl>  
@@ -72,11 +72,11 @@
         <boundFacetSuffix>Duration</boundFacetSuffix>
         <code>
     static DOM::DOMString typeToString(XPlus::Duration val) {
-      return DateTimeUtils::formatXsdDuration(val); 
+      return XPlus::DateTimeUtils::formatXsdDuration(val); 
     }
 
     static XPlus::Duration stringToType(DOM::DOMString strVal) {
-       return DateTimeUtils::parseXsdDuration(strVal);
+       return XPlus::DateTimeUtils::parseXsdDuration(strVal);
     }
         </code>
       </impl>  
@@ -86,11 +86,11 @@
         <boundFacetSuffix>DateTime</boundFacetSuffix>
         <code>
     static DOM::DOMString typeToString(XPlus::DateTime val) {
-      return DateTimeUtils::formatISO8601DateTime(val); 
+      return XPlus::DateTimeUtils::formatISO8601DateTime(val); 
     }
 
     static XPlus::DateTime stringToType(DOM::DOMString strVal) {
-       return DateTimeUtils::parseISO8601DateTime(strVal);
+       return XPlus::DateTimeUtils::parseISO8601DateTime(strVal);
     }
         </code>
       </impl>  
@@ -100,11 +100,11 @@
         <boundFacetSuffix>DateTime</boundFacetSuffix>
         <code>
     static DOM::DOMString typeToString(XPlus::Date val) {
-      return DateTimeUtils::formatXsdDate(val); 
+      return XPlus::DateTimeUtils::formatXsdDate(val); 
     }
 
     static XPlus::Date stringToType(DOM::DOMString strVal) {
-       return DateTimeUtils::parseXsdDate(strVal);
+       return XPlus::DateTimeUtils::parseXsdDate(strVal);
     }
         </code>
       </impl>  
@@ -114,11 +114,11 @@
         <boundFacetSuffix>DateTime</boundFacetSuffix>
         <code>
     static DOM::DOMString typeToString(XPlus::YearMonth val) {
-      return DateTimeUtils::formatXsdYearMonth(val); 
+      return XPlus::DateTimeUtils::formatXsdYearMonth(val); 
     }
 
     static XPlus::YearMonth stringToType(DOM::DOMString strVal) {
-       return DateTimeUtils::parseXsdYearMonth(strVal);
+       return XPlus::DateTimeUtils::parseXsdYearMonth(strVal);
     }
         </code>
       </impl>  
@@ -128,11 +128,11 @@
         <boundFacetSuffix>DateTime</boundFacetSuffix>
         <code>
     static DOM::DOMString typeToString(XPlus::MonthDay val) {
-      return DateTimeUtils::formatXsdMonthDay(val); 
+      return XPlus::DateTimeUtils::formatXsdMonthDay(val); 
     }
 
     static XPlus::MonthDay stringToType(DOM::DOMString strVal) {
-       return DateTimeUtils::parseXsdMonthDay(strVal);
+       return XPlus::DateTimeUtils::parseXsdMonthDay(strVal);
     }
         </code>
       </impl>  
@@ -142,11 +142,11 @@
         <boundFacetSuffix>DateTime</boundFacetSuffix>
         <code>
     static DOM::DOMString typeToString(XPlus::Day val) {
-      return DateTimeUtils::formatXsdDay(val); 
+      return XPlus::DateTimeUtils::formatXsdDay(val); 
     }
 
     static XPlus::Day stringToType(DOM::DOMString strVal) {
-       return DateTimeUtils::parseXsdDay(strVal);
+       return XPlus::DateTimeUtils::parseXsdDay(strVal);
     }
         </code>
       </impl>  
@@ -156,11 +156,11 @@
         <boundFacetSuffix>DateTime</boundFacetSuffix>
         <code>
     static DOM::DOMString typeToString(XPlus::Month val) {
-      return DateTimeUtils::formatXsdMonth(val); 
+      return XPlus::DateTimeUtils::formatXsdMonth(val); 
     }
 
     static XPlus::Month stringToType(DOM::DOMString strVal) {
-       return DateTimeUtils::parseXsdMonth(strVal);
+       return XPlus::DateTimeUtils::parseXsdMonth(strVal);
     }
         </code>
       </impl>  
@@ -175,7 +175,7 @@
     }
 
     static XPlus::Year stringToType(DOM::DOMString strVal) {
-       return Year(XPlus::fromString&lt;int&gt;(strVal));
+       return XPlus::Year(XPlus::fromString&lt;int&gt;(strVal));
     }
         </code>
       </impl>  

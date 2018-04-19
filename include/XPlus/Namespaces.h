@@ -22,8 +22,6 @@
 
 #include "DOM/DOMCommonInc.h"
 
-using namespace DOM;
-
 namespace XPlus
 {
   class Namespaces
@@ -33,44 +31,44 @@ namespace XPlus
       //
       //                  'xml' prefix: namespace and attributes 
       //
-      static DOMString   s_xmlStr; 
-      static DOMString   s_xmlUri;
-      static DOMString   s_xmlLangStr; 
-      static DOMString   s_xmlSpaceStr;
-      static DOMString   s_xmlBaseStr;
-      static DOMString   s_xmlIdStr;
+      static DOM::DOMString   s_xmlStr; 
+      static DOM::DOMString   s_xmlUri;
+      static DOM::DOMString   s_xmlLangStr; 
+      static DOM::DOMString   s_xmlSpaceStr;
+      static DOM::DOMString   s_xmlBaseStr;
+      static DOM::DOMString   s_xmlIdStr;
       // respective static pointers to the above xml strings
-      static DOMStringPtr   s_xmlStrPtr; 
-      static DOMStringPtr   s_xmlUriPtr;
-      static DOMStringPtr   s_xmlLangStrPtr; 
-      static DOMStringPtr   s_xmlSpaceStrPtr;
-      static DOMStringPtr   s_xmlBaseStrPtr;
-      static DOMStringPtr   s_xmlIdStrPtr;
+      static DOM::DOMStringPtr   s_xmlStrPtr; 
+      static DOM::DOMStringPtr   s_xmlUriPtr;
+      static DOM::DOMStringPtr   s_xmlLangStrPtr; 
+      static DOM::DOMStringPtr   s_xmlSpaceStrPtr;
+      static DOM::DOMStringPtr   s_xmlBaseStrPtr;
+      static DOM::DOMStringPtr   s_xmlIdStrPtr;
 
       //
       //                  'xsi' prefix: namespace and attributes 
       //
 
       // the string "xsi" and not this prefix's nsUri in the context
-      static DOMString   s_xsiStr; 
+      static DOM::DOMString   s_xsiStr; 
       // pointer to DOMString : "http://www.w3.org/2001/XMLSchema-instance"
-      static DOMString   s_xsiUri;
+      static DOM::DOMString   s_xsiUri;
       // the string "type" and not this attribute's value in the context
-      static DOMString   s_xsiTypeStr; 
+      static DOM::DOMString   s_xsiTypeStr; 
       // the string "nil" and not this attribute's value in the context
-      static DOMString   s_xsiNilStr;
+      static DOM::DOMString   s_xsiNilStr;
       // the string "schemaLocation" and not this attribute's value in the context
-      static DOMString   s_xsiSchemaLocationStr;
+      static DOM::DOMString   s_xsiSchemaLocationStr;
       // the string "noNamespaceSchemaLocation" and not this attribute's value in the context
-      static DOMString   s_xsiNoNamespaceSchemaLocationStr;
+      static DOM::DOMString   s_xsiNoNamespaceSchemaLocationStr;
 
       // respective static pointers to the above xsi strings
-      static DOMStringPtr   s_xsiStrPtr; 
-      static DOMStringPtr   s_xsiUriPtr;
-      static DOMStringPtr   s_xsiTypeStrPtr; 
-      static DOMStringPtr   s_xsiNilStrPtr;
-      static DOMStringPtr   s_xsiSchemaLocationStrPtr;
-      static DOMStringPtr   s_xsiNoNamespaceSchemaLocationStrPtr;
+      static DOM::DOMStringPtr   s_xsiStrPtr; 
+      static DOM::DOMStringPtr   s_xsiUriPtr;
+      static DOM::DOMStringPtr   s_xsiTypeStrPtr; 
+      static DOM::DOMStringPtr   s_xsiNilStrPtr;
+      static DOM::DOMStringPtr   s_xsiSchemaLocationStrPtr;
+      static DOM::DOMStringPtr   s_xsiNoNamespaceSchemaLocationStrPtr;
   };
 }
 

@@ -94,7 +94,7 @@ targetNamespace="http://www.w3.org/2001/XMLSchema"
   MEMBER_VAR <xsl:value-of select="$cppTypeUseCase"/><xsl:text> </xsl:text><xsl:value-of select="$cppNameUseCase"/>;
     <xsl:variable name="cppFsmName"><xsl:call-template name="T_get_cppFsmName_ElementAttr"/></xsl:variable>
     <xsl:variable name="cppTypePtrShort"><xsl:call-template name="T_get_cppTypeSmartPtrShort_ElementAttr"/></xsl:variable>
-  MEMBER_VAR XsdFSM&lt;<xsl:value-of select="$cppTypePtrShort"/>&gt;*<xsl:text> </xsl:text><xsl:value-of select="$cppFsmName"/>;
+  MEMBER_VAR FSM::XsdFSM&lt;<xsl:value-of select="$cppTypePtrShort"/>&gt;*<xsl:text> </xsl:text><xsl:value-of select="$cppFsmName"/>;
     </xsl:when>
     <xsl:when test="$mode='TLE_decl_pvt_functions_doc_h'">
       <xsl:call-template name="DECL_PVT_FNS_FOR_MEMBER_ELEMENT_OR_ATTRIBUTE_H"/>  
@@ -117,7 +117,7 @@ targetNamespace="http://www.w3.org/2001/XMLSchema"
     <xsl:variable name="cppNameUseCase"><xsl:call-template name="T_get_cppNameUseCase_ElementAttr"><xsl:with-param name="useCase" select="'declaration'"/></xsl:call-template></xsl:variable>
       if(!<xsl:value-of select="$cppNameUseCase"/>) 
       {
-        XsdEvent event(<xsl:call-template name="T_get_cppPtr_targetNsUri_ElementAttr"/>, NULL, DOMString("<xsl:call-template name="T_get_name_ElementAttr"/>"), XsdEvent::ELEMENT_START);
+        FSM::XsdEvent event(<xsl:call-template name="T_get_cppPtr_targetNsUri_ElementAttr"/>, NULL, DOM::DOMString("<xsl:call-template name="T_get_name_ElementAttr"/>"), FSM::XsdEvent::ELEMENT_START);
         _fsm->processEventThrow(event); 
       }
     }
@@ -133,7 +133,7 @@ targetNamespace="http://www.w3.org/2001/XMLSchema"
       <xsl:variable name="cppNameFunction"><xsl:call-template name="T_get_cppNameUseCase_ElementAttr"><xsl:with-param name="useCase" select="'functionName'"/></xsl:call-template></xsl:variable>
       <xsl:variable name="cppTypePtrShort"><xsl:call-template name="T_get_cppTypeSmartPtrShort_ElementAttr"/></xsl:variable>
       <xsl:variable name="cppPtrNsUri"><xsl:call-template name="T_get_cppPtr_targetNsUri_ElementAttr"/></xsl:variable>
-    <xsl:value-of select="$cppFsmName"/> = new XsdFSM&lt;<xsl:value-of select="$cppTypePtrShort"/>&gt;( Particle(<xsl:value-of select="$cppPtrNsUri"/>,  DOMString("<xsl:call-template name="T_get_name_ElementAttr"/>"), <xsl:call-template name="T_get_minOccurence"/>, <xsl:call-template name="T_get_maxOccurence"/>),  XsdEvent::ELEMENT_START, new object_unary_mem_fun_t&lt;<xsl:value-of select="$cppTypePtrShort"/>, <xsl:value-of select="$schemaComponentName"/>, FsmCbOptions&gt;(this, &amp;<xsl:value-of select="$schemaComponentName"/>::create_<xsl:value-of select="$cppNameFunction"/>));
+    <xsl:value-of select="$cppFsmName"/> = new FSM::XsdFSM&lt;<xsl:value-of select="$cppTypePtrShort"/>&gt;( FSM::Particle(<xsl:value-of select="$cppPtrNsUri"/>,  DOM::DOMString("<xsl:call-template name="T_get_name_ElementAttr"/>"), <xsl:call-template name="T_get_minOccurence"/>, <xsl:call-template name="T_get_maxOccurence"/>),  FSM::XsdEvent::ELEMENT_START, new XPlus::object_unary_mem_fun_t&lt;<xsl:value-of select="$cppTypePtrShort"/>, <xsl:value-of select="$schemaComponentName"/>, FSM::FsmCbOptions&gt;(this, &amp;<xsl:value-of select="$schemaComponentName"/>::create_<xsl:value-of select="$cppNameFunction"/>));
     </xsl:when>
     <xsl:when test="$mode='init_fsm_array_elem'">
         <xsl:variable name="cppFsmName"><xsl:call-template name="T_get_cppFsmName_ElementAttr"/></xsl:variable>

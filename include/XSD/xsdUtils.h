@@ -34,12 +34,6 @@
 #include "XSD/PrimitiveTypes.h"
 #include "XSD/UrTypes.h"
 
-using namespace std;
-using namespace XPlus;
-using namespace FSM;
-using namespace XMLSchema::Types;
-
-
 /*
         DOM::Element
             ^
@@ -81,8 +75,8 @@ namespace XMLSchema
   class TElement;
   class TDocument;
   
-  typedef AutoPtr<TElement> TElementPtr;
-  typedef AutoPtr<TDocument> TDocumentPtr;
+  typedef XPlus::AutoPtr<TElement> TElementPtr;
+  typedef XPlus::AutoPtr<TDocument> TDocumentPtr;
   typedef TElement* TElementP;
   typedef TDocument* TDocumentP;
 
@@ -91,10 +85,10 @@ namespace XMLSchema
   {
     public:
 
-      XmlAttribute(AttributeCreateArgs args):
+      XmlAttribute(Types::AttributeCreateArgs args):
         DOM::Attribute(args.name, args.strValue, args.nsUri, args.nsPrefix, args.ownerElem, args.ownerDoc),
-        T(AnyTypeCreateArgs(true, this, args.ownerElem, args.ownerDoc, false,false,
-                            BOF_NONE, BOF_NONE, CONTENT_TYPE_VARIETY_MIXED, ANY_TYPE,
+        T(Types::AnyTypeCreateArgs(true, this, args.ownerElem, args.ownerDoc, false,false,
+                            Types::BOF_NONE, Types::BOF_NONE, Types::CONTENT_TYPE_VARIETY_MIXED, Types::ANY_TYPE,
                             false, args.isSampleCreate)
         )
       { 
@@ -105,7 +99,7 @@ namespace XMLSchema
 
       virtual ~XmlAttribute() {}
 
-      virtual inline TextNodeP createTextNode(DOMString* data) 
+      virtual inline TextNodeP createTextNode(DOM::DOMString* data) 
       {
         try {
           return T::createTextNode(data);
@@ -118,7 +112,7 @@ namespace XMLSchema
         }
       }
 
-      virtual inline CDATASection* createCDATASection(DOMString* data) 
+      virtual inline CDATASection* createCDATASection(DOM::DOMString* data) 
       {
         try {
           return T::createCDATASection(data);
@@ -144,7 +138,7 @@ namespace XMLSchema
     protected:
       bool _buildTree;
       bool _createSample;
-      XsdFsmBasePtr  _fsm;
+      FSM::XsdFsmBasePtr  _fsm;
       
       //scratchPad variables
       //Node*           _fsmCreatedNode;
@@ -177,12 +171,12 @@ namespace XMLSchema
       inline TElementP currentElement();
       inline void currentElement(ElementP elem);
 
-      virtual TextNodeP createTextNode(DOMString* data);
+      virtual TextNodeP createTextNode(DOM::DOMString* data);
       
-      virtual Element* createElementWithAttributes(DOMString* nsUri, DOMString* nsPrefix, DOMString* localName, vector<AttributeInfo>& attrVec);
+      virtual Element* createElementWithAttributes(DOM::DOMString* nsUri, DOM::DOMString* nsPrefix, DOM::DOMString* localName, std::vector<AttributeInfo>& attrVec);
 
-      //virtual AttributeP createAttributeNS(DOMString* namespaceURI, DOMString* nsPrefix, DOMString* localName, DOMString* value);
-      void endElementNS(DOMString* nsURI, DOMString* nsPrefix, DOMString* localName);
+      //virtual AttributeP createAttributeNS(DOM::DOMString* namespaceURI, DOM::DOMString* nsPrefix, DOM::DOMString* localName, DOM::DOMString* value);
+      void endElementNS(DOM::DOMString* nsURI, DOM::DOMString* nsPrefix, DOM::DOMString* localName);
       void startDocument();
       void endDocument();
 
@@ -209,7 +203,7 @@ namespace XMLSchema
       // constructor 
       // NB: 
       // previousSiblingElement : is previousSibling to this TElement
-    TElement(ElementCreateArgs args):
+    TElement(Types::ElementCreateArgs args):
         DOM::Element(args.name, args.nsUri, args.nsPrefix, args.ownerDoc, args.parentNode, args.previousSiblingElement, args.nextSiblingElement),
         _abstract(args.abstract),
         _nillable(args.nillable),
@@ -225,23 +219,23 @@ namespace XMLSchema
       }
     }
 
-    TElement() {printf("TElement::TElement()\n");};
+    TElement() {printf("TElement::TElement()\n");}
 
-    virtual ~TElement() {};
+    virtual ~TElement() {}
 
     virtual TDocumentP ownerDocument() =0;
     virtual TElementP ownerElement() =0; 
       
-    virtual Element* createElementWithAttributes(DOMString* nsUri, DOMString* nsPrefix, DOMString* localName, vector<AttributeInfo>& attrVec)=0;
+    virtual Element* createElementWithAttributes(DOM::DOMString* nsUri, DOM::DOMString* nsPrefix, DOM::DOMString* localName, std::vector<AttributeInfo>& attrVec)=0;
 
-    virtual void endElementNS(DOMString* nsURI, DOMString* nsPrefix, DOMString* localName) =0;
+    virtual void endElementNS(DOM::DOMString* nsURI, DOM::DOMString* nsPrefix, DOM::DOMString* localName) =0;
 
-    virtual AttributeP createAttributeNS(DOMString* namespaceURI,
-        DOMString* nsPrefix, DOMString* localName, DOMString* value) =0;
+    virtual AttributeP createAttributeNS(DOM::DOMString* namespaceURI,
+        DOM::DOMString* nsPrefix, DOM::DOMString* localName, DOM::DOMString* value) =0;
 
     virtual void endDocument() =0;
       
-    virtual TextNodeP createTextNode(DOMString* data) =0;
+    virtual TextNodeP createTextNode(DOM::DOMString* data) =0;
 
     inline bool abstract() {
       return _abstract;
@@ -254,7 +248,6 @@ namespace XMLSchema
     }
   };
   
-  //XMLSchema::XmlElement<XMLSchema::Types::anyType>::XmlElement()
 
   template <class T> class XmlElement :  public TElement, public T
   {
@@ -262,20 +255,20 @@ namespace XMLSchema
 
     public:
 
-      XmlElement(ElementCreateArgs args):
+      XmlElement(Types::ElementCreateArgs args):
           TElement(args),
-          T(AnyTypeCreateArgs(true, this, this, args.ownerDoc, args.childBuildsTree, false, 
+          T(Types::AnyTypeCreateArgs(true, this, this, args.ownerDoc, args.childBuildsTree, false, 
                               Types::BOF_NONE, Types::BOF_NONE, Types::CONTENT_TYPE_VARIETY_MIXED, 
                               Types::ANY_TYPE, args.suppressTypeAbstract, args.isSampleCreate)
            )
     {
-        printf("XMLSchema::XmlElement::XmlElement(XMLSchema::Types::ElementCreateArgs)\n");
-        cout << args.name->str() << endl;
+      printf("XMLSchema::XmlElement::XmlElement(XMLSchema::Types::ElementCreateArgs\n");
+      cout << args.name->str() << endl;
     }
 
-      XmlElement() {printf("XmlElement::XmlElement()\n");};
+      XmlElement() {printf("XmlElement::XmlElement()\n");}
 
-      virtual ~XmlElement() {};
+      virtual ~XmlElement() {}
         
       //
       // TElement interface: delegates the call to T
@@ -288,7 +281,7 @@ namespace XMLSchema
         return T::ownerElement();
       }
       
-      virtual TElement* createElementWithAttributes(DOMString* nsUri, DOMString* nsPrefix, DOMString* localName, vector<AttributeInfo>& attrVec)
+      virtual TElement* createElementWithAttributes(DOM::DOMString* nsUri, DOM::DOMString* nsPrefix, DOM::DOMString* localName, std::vector<AttributeInfo>& attrVec)
       {
         try {
           return T::createElementWithAttributes(nsUri, nsPrefix, localName, attrVec);
@@ -300,15 +293,15 @@ namespace XMLSchema
         }
       }
 
-      virtual inline void endElementNS(DOMString* nsUri, DOMString* nsPrefix, DOMString* localName)
+      virtual inline void endElementNS(DOM::DOMString* nsUri, DOM::DOMString* nsPrefix, DOM::DOMString* localName)
       {
         T::endElementNS(nsUri, nsPrefix, localName);
       }
 
-      virtual AttributeP createAttributeNS(DOMString* nsUri,
-          DOMString* nsPrefix, 
-          DOMString* localName, 
-          DOMString* value) 
+      virtual AttributeP createAttributeNS(DOM::DOMString* nsUri,
+          DOM::DOMString* nsPrefix, 
+          DOM::DOMString* localName, 
+          DOM::DOMString* value) 
       {
         try {
           return T::createAttributeNS(nsUri, nsPrefix, localName, value);
@@ -326,7 +319,7 @@ namespace XMLSchema
         T::endDocument();
       }
 
-      virtual inline TextNodeP createTextNode(DOMString* data) 
+      virtual inline TextNodeP createTextNode(DOM::DOMString* data) 
       {
         try {
           return T::createTextNode(data);
@@ -338,7 +331,7 @@ namespace XMLSchema
         }
       }
 
-      virtual inline CDATASection* createCDATASection(DOMString* data) 
+      virtual inline CDATASection* createCDATASection(DOM::DOMString* data) 
       {
         try {
           return T::createCDATASection(data);
@@ -361,7 +354,7 @@ namespace XMLSchema
 
 } // end namespace XMLSchema
 
-//typedef XMLSchema::TDocument* TDocumentP;
+//typedef TDocument* TDocumentP;
 
 #endif /* __XSD_UTILS_H__ */  
 

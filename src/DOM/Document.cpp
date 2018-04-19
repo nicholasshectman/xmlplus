@@ -101,7 +101,7 @@ namespace DOM
       throw DOMException("createElementNS: qualifiedName arg is NULL");
     }
     vector<XPlus::UString> tokens;
-    qualifiedName->tokenize(':', tokens);
+    qualifiedName->tokenize(":", tokens);
     poco_assert(tokens.size()==2);
     return createElementNS(nsUri, new DOMString(tokens[0]), new DOMString(tokens[1]));
   }

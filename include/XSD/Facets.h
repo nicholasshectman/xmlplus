@@ -20,13 +20,6 @@
 #ifndef __XSD_CFACETS_H__
 #define __XSD_CFACETS_H__
 
-#include "XPlus/Types.h"
-#include "XPlus/StringUtils.h"
-#include "XSD/XSDException.h"
-#include "Poco/RegularExpression.h"
-
-using Poco::RegularExpression;
-
 /*
    4.3 Constraining Facets
    4.3.1 length
@@ -43,8 +36,6 @@ using Poco::RegularExpression;
    4.3.12 fractionDigits
 
  */        
-
-using namespace XPlus;
 
 namespace XMLSchema
 {
@@ -67,10 +58,10 @@ namespace XMLSchema
       inline eConstrainingFacets type() {
         return _type;
       }
-      virtual inline DOMString stringValue() const {
+      virtual inline DOM::DOMString stringValue() const {
         return "";
       }
-      virtual void stringValue(DOMString /*strVal*/){
+      virtual void stringValue(DOM::DOMString /*strVal*/){
       };
 
       inline bool isInError() {
@@ -91,7 +82,7 @@ namespace XMLSchema
         return _fixed;
       }
 
-      vector<DOMString>& errors() {
+      std::vector<DOM::DOMString>& errors() {
         return _errors;
       }
 
@@ -100,7 +91,7 @@ namespace XMLSchema
       eConstrainingFacets    _type;
       bool                   _fixed;
       bool                   _isSet;
-      vector<DOMString>         _errors;
+      std::vector<DOM::DOMString>         _errors;
 
   };
 
@@ -124,14 +115,14 @@ namespace XMLSchema
       virtual void validateCFacetValueWrtParent(T val)
       {
 
-        DOMString currFacetValStr = this->stringValue();
+        DOM::DOMString currFacetValStr = this->stringValue();
         
         // seting the value of self with new value, to get string of new value
         // and resetting it back
         //DOMString newFacetValStr = facetToStringValue(type(), val);
         T tmpVal = _value; 
         _value = val;
-        DOMString newFacetValStr = this->stringValue();
+        DOM::DOMString newFacetValStr = this->stringValue();
         _value = tmpVal;
 
         //NB: throwing exception in constructor causes some strange issues.
@@ -189,7 +180,7 @@ namespace XMLSchema
         return _value;
       }
 
-      static DOMString facetToStringValue(eConstrainingFacets facet, T val) 
+      static DOM::DOMString facetToStringValue(eConstrainingFacets facet, T val) 
       {
         ConstrainingFacet<T> dummy(facet, val);
         return dummy.stringValue();
@@ -283,13 +274,13 @@ namespace XMLSchema
     {
     }
 
-    virtual void stringValue(DOMString strVal) {
-      T val = fromString<T>(strVal); 
+    virtual void stringValue(DOM::DOMString strVal) {
+      T val = XPlus::fromString<T>(strVal); 
       this->value(val);
     }
 
-    virtual DOMString stringValue()  const{
-      return toString<T>(ConstrainingFacet<T>::_value);
+    virtual DOM::DOMString stringValue()  const{
+      return XPlus::toString<T>(ConstrainingFacet<T>::_value);
     }
   };
 
@@ -302,13 +293,13 @@ namespace XMLSchema
     {
     }
 
-    virtual void stringValue(DOMString strVal) {
-      T val = fromString<T>(strVal); 
+    virtual void stringValue(DOM::DOMString strVal) {
+      T val = XPlus::fromString<T>(strVal); 
       this->value(val);
     }
 
-    virtual DOMString stringValue() const {
-      return toString<T>(ConstrainingFacet<T>::_value);
+    virtual DOM::DOMString stringValue() const {
+      return XPlus::toString<T>(ConstrainingFacet<T>::_value);
     }
   };
 
@@ -322,15 +313,15 @@ namespace XMLSchema
       _primitiveType(primType)
     { }
 
-    virtual void stringValue(DOMString strVal) 
+    virtual void stringValue(DOM::DOMString strVal) 
     {
       //FIXME: need to accomodate patterns of all: dateTime/date/year/month.... etc
       /*
-      static DOMString dateTimePattern = "\\-?\\d{4,}\\-(0[1-9]|10|11|12)\\-((0[1-9])|([1-2][0-9])|(3[0-1]))T(([0-1][0-9])|(2[0-4])):[0-5][0-9]:[0-5][0-9](\\.\\d+)?(Z|([+\\-]\\d\\d:\\d\\d))?";
+      static DOM::DOMString dateTimePattern = "\\-?\\d{4,}\\-(0[1-9]|10|11|12)\\-((0[1-9])|([1-2][0-9])|(3[0-1]))T(([0-1][0-9])|(2[0-4])):[0-5][0-9]:[0-5][0-9](\\.\\d+)?(Z|([+\\-]\\d\\d:\\d\\d))?";
       static RegularExpression re(dateTimePattern);
       if(!re.match(strVal)) 
       {
-        ValidationException ex(DOMString("dateTime facet value violated pattern:")+dateTimePattern);
+        ValidationException ex(DOM::DOMString("dateTime facet value violated pattern:")+dateTimePattern);
         ex.setContext("facet-value",  strVal);
         throw ex;
       }
@@ -340,44 +331,44 @@ namespace XMLSchema
       {
         case PD_GDAY:
         {
-          XPlus::Day aDay = DateTimeUtils::parseXsdDay(strVal);
-          XPlus::DateTime dtTime = DateTime(DateTime::UNSPECIFIED, DateTime::UNSPECIFIED, aDay.day(), DateTime::UNSPECIFIED, DateTime::UNSPECIFIED, DateTime::UNSPECIFIED);
+          XPlus::Day aDay = XPlus::DateTimeUtils::parseXsdDay(strVal);
+          XPlus::DateTime dtTime = XPlus::DateTime(XPlus::DateTime::UNSPECIFIED, XPlus::DateTime::UNSPECIFIED, aDay.day(), XPlus::DateTime::UNSPECIFIED, XPlus::DateTime::UNSPECIFIED, XPlus::DateTime::UNSPECIFIED);
           value(dtTime);
         }
           break;
         default:
         {
-          XPlus::DateTime dtTime = DateTimeUtils::parseISO8601DateTime(strVal);
+          XPlus::DateTime dtTime = XPlus::DateTimeUtils::parseISO8601DateTime(strVal);
           value(dtTime);
         }
       }
     }
 
-    virtual DOMString stringValue() const 
+    virtual DOM::DOMString stringValue() const 
     {
       switch(_primitiveType)
       {
         case PD_DATETIME:
-          return DateTimeUtils::formatISO8601DateTime(_value); 
+          return XPlus::DateTimeUtils::formatISO8601DateTime(_value); 
         case PD_DATE:
-          return DateTimeUtils::formatXsdDate(_value); 
+          return XPlus::DateTimeUtils::formatXsdDate(_value); 
         case PD_GYEARMONTH:
-          return DateTimeUtils::formatXsdYearMonth(_value); 
+          return XPlus::DateTimeUtils::formatXsdYearMonth(_value); 
         case PD_GYEAR:
           {
             int year = _value.year();
-            return toString<int>(year);
+            return XPlus::toString<int>(year);
           }
         case PD_GMONTHDAY:
-          return DateTimeUtils::formatXsdMonthDay(_value); 
+          return XPlus::DateTimeUtils::formatXsdMonthDay(_value); 
         case PD_GMONTH:
-          return DateTimeUtils::formatXsdMonth(_value); 
+          return XPlus::DateTimeUtils::formatXsdMonth(_value); 
         case PD_GDAY:
-          return DateTimeUtils::formatXsdDay(_value); 
+          return XPlus::DateTimeUtils::formatXsdDay(_value); 
         case PD_TIME:
-          return DateTimeUtils::formatXsdTime(_value); 
+          return XPlus::DateTimeUtils::formatXsdTime(_value); 
         default:
-          return DateTimeUtils::formatISO8601DateTime(_value); 
+          return XPlus::DateTimeUtils::formatISO8601DateTime(_value); 
       }
     }
 
@@ -393,62 +384,62 @@ namespace XMLSchema
       OrderableCFacet<XPlus::Duration>(facetType, facetValue, fixed)
     { }
 
-    virtual void stringValue(DOMString strVal) 
+    virtual void stringValue(DOM::DOMString strVal) 
     {
-      XPlus::Duration dur = DateTimeUtils::parseXsdDuration(strVal);
+      XPlus::Duration dur = XPlus::DateTimeUtils::parseXsdDuration(strVal);
       this->value(dur);
     }
 
-    virtual DOMString stringValue() const {
-      return DateTimeUtils::formatXsdDuration(_value); 
+    virtual DOM::DOMString stringValue() const {
+      return XPlus::DateTimeUtils::formatXsdDuration(_value); 
     }
 
   };
 
 
-  struct LengthCFacet : public NativeTypeOrderableCFacet<UInt32>
+  struct LengthCFacet : public NativeTypeOrderableCFacet<XPlus::UInt32>
   {
-    LengthCFacet(UInt32 length, bool fixed=false):
+    LengthCFacet(XPlus::UInt32 length, bool fixed=false):
       ConstrainingFacetBase(CF_LENGTH, fixed),
-      NativeTypeOrderableCFacet<UInt32>(CF_LENGTH, length, fixed)
+      NativeTypeOrderableCFacet<XPlus::UInt32>(CF_LENGTH, length, fixed)
     {
     }
   };
 
-  struct MinLengthCFacet : public NativeTypeOrderableCFacet<UInt32>
+  struct MinLengthCFacet : public NativeTypeOrderableCFacet<XPlus::UInt32>
   {
-    MinLengthCFacet(UInt32 length, bool fixed=false):
+    MinLengthCFacet(XPlus::UInt32 length, bool fixed=false):
       ConstrainingFacetBase(CF_MINLENGTH, fixed),
-      NativeTypeOrderableCFacet<UInt32>(CF_MINLENGTH, length, fixed)
+      NativeTypeOrderableCFacet<XPlus::UInt32>(CF_MINLENGTH, length, fixed)
     {
     }
   };
 
-  struct MaxLengthCFacet : public NativeTypeOrderableCFacet<UInt32>
+  struct MaxLengthCFacet : public NativeTypeOrderableCFacet<XPlus::UInt32>
   {
-    MaxLengthCFacet(UInt32 length, bool fixed=false):
+    MaxLengthCFacet(XPlus::UInt32 length, bool fixed=false):
       ConstrainingFacetBase(CF_MAXLENGTH, fixed),
-      NativeTypeOrderableCFacet<UInt32>(CF_MAXLENGTH, length, fixed)
+      NativeTypeOrderableCFacet<XPlus::UInt32>(CF_MAXLENGTH, length, fixed)
     {
     }
   };
 
 /*
-  struct PatternCFacet : public NativeTypeCFacet<DOMString>
+  struct PatternCFacet : public NativeTypeCFacet<DOM::DOMString>
   {
-    PatternCFacet(DOMString pattern, bool fixed=false):
+    PatternCFacet(DOM::DOMString pattern, bool fixed=false):
       ConstrainingFacetBase(CF_PATTERN, fixed),
-      NativeTypeCFacet<DOMString>(CF_PATTERN, pattern, fixed)
+      NativeTypeCFacet<DOM::DOMString>(CF_PATTERN, pattern, fixed)
     {
     }
   };
 */
 
-  struct WhiteSpaceCFacet : public NativeTypeCFacet<DOMString>
+  struct WhiteSpaceCFacet : public NativeTypeCFacet<DOM::DOMString>
   {
-    WhiteSpaceCFacet(DOMString strVal, bool fixed=false):
+    WhiteSpaceCFacet(DOM::DOMString strVal, bool fixed=false):
       ConstrainingFacetBase(CF_WHITESPACE, fixed),
-      NativeTypeCFacet<DOMString>(CF_WHITESPACE, strVal, fixed)
+      NativeTypeCFacet<DOM::DOMString>(CF_WHITESPACE, strVal, fixed)
     {
     }
   };
@@ -472,21 +463,21 @@ namespace XMLSchema
   };
 
 
-  struct EnumerationCFacet : public ConstrainingFacet<vector<DOMString> >
+  struct EnumerationCFacet : public ConstrainingFacet<std::vector<DOM::DOMString> >
   {
-    EnumerationCFacet(vector<DOMString> enums):
+    EnumerationCFacet(std::vector<DOM::DOMString> enums):
       ConstrainingFacetBase(CF_ENUMERATION),
-      ConstrainingFacet<vector<DOMString> >(CF_ENUMERATION, enums)
+      ConstrainingFacet<std::vector<DOM::DOMString> >(CF_ENUMERATION, enums)
     {
     }
 
     EnumerationCFacet():
       ConstrainingFacetBase(CF_ENUMERATION),
-      ConstrainingFacet<vector<DOMString> >(CF_ENUMERATION)
+      ConstrainingFacet<std::vector<DOM::DOMString> >(CF_ENUMERATION)
     {
     }
 
-    virtual DOMString stringValue() const 
+    virtual DOM::DOMString stringValue() const 
     {
       ostringstream oss;
       oss << " one of the enums (";
@@ -497,21 +488,21 @@ namespace XMLSchema
   };
 
 
-  struct PatternCFacet : public ConstrainingFacet<vector<DOMString> >
+  struct PatternCFacet : public ConstrainingFacet<std::vector<DOM::DOMString> >
   {
-     PatternCFacet(vector<DOMString> patterns):
+     PatternCFacet(std::vector<DOM::DOMString> patterns):
       ConstrainingFacetBase(CF_PATTERN),
-      ConstrainingFacet<vector<DOMString> >(CF_PATTERN, patterns)
+      ConstrainingFacet<std::vector<DOM::DOMString> >(CF_PATTERN, patterns)
     {
     }
 
     PatternCFacet():
       ConstrainingFacetBase(CF_PATTERN),
-      ConstrainingFacet<vector<DOMString> >(CF_PATTERN)
+      ConstrainingFacet<std::vector<DOM::DOMString> >(CF_PATTERN)
     {
     }
 
-    virtual DOMString stringValue() const 
+    virtual DOM::DOMString stringValue() const 
     {
       ostringstream oss;
       oss << " one of the patterns (";
@@ -530,7 +521,7 @@ namespace XMLSchema
 
   struct MaxInclusiveCFacetDateTime : public DateTimeCFacet
   {
-    MaxInclusiveCFacetDateTime(ePrimitiveDataType primType, XPlus::DateTime facetValue=DateTime(), bool fixed=false):
+    MaxInclusiveCFacetDateTime(ePrimitiveDataType primType, XPlus::DateTime facetValue=XPlus::DateTime(), bool fixed=false):
       ConstrainingFacetBase(CF_MAXINCLUSIVE, fixed),
       DateTimeCFacet(primType, CF_MAXINCLUSIVE, facetValue, fixed)
     { }
@@ -538,7 +529,7 @@ namespace XMLSchema
 
   struct MaxExclusiveCFacetDateTime : public DateTimeCFacet
   {
-    MaxExclusiveCFacetDateTime(ePrimitiveDataType primType, XPlus::DateTime facetValue=DateTime(), bool fixed=false):
+    MaxExclusiveCFacetDateTime(ePrimitiveDataType primType, XPlus::DateTime facetValue=XPlus::DateTime(), bool fixed=false):
       ConstrainingFacetBase(CF_MAXEXCLUSIVE, fixed),
       DateTimeCFacet(primType, CF_MAXEXCLUSIVE, facetValue, fixed)
     { }
@@ -546,7 +537,7 @@ namespace XMLSchema
 
   struct MinInclusiveCFacetDateTime : public DateTimeCFacet
   {
-    MinInclusiveCFacetDateTime(ePrimitiveDataType primType, XPlus::DateTime facetValue=DateTime(), bool fixed=false):
+    MinInclusiveCFacetDateTime(ePrimitiveDataType primType, XPlus::DateTime facetValue=XPlus::DateTime(), bool fixed=false):
       ConstrainingFacetBase(CF_MININCLUSIVE, fixed),
       DateTimeCFacet(primType, CF_MININCLUSIVE, facetValue, fixed)
     { }
@@ -554,7 +545,7 @@ namespace XMLSchema
 
   struct MinExclusiveCFacetDateTime : public DateTimeCFacet
   {
-    MinExclusiveCFacetDateTime(ePrimitiveDataType primType, XPlus::DateTime facetValue=DateTime(), bool fixed=false):
+    MinExclusiveCFacetDateTime(ePrimitiveDataType primType, XPlus::DateTime facetValue=XPlus::DateTime(), bool fixed=false):
       ConstrainingFacetBase(CF_MINEXCLUSIVE, fixed),
       DateTimeCFacet(primType, CF_MINEXCLUSIVE, facetValue, fixed)
     { }
@@ -569,7 +560,7 @@ namespace XMLSchema
 
   struct MaxInclusiveCFacetDuration : public DurationCFacet
   {
-    MaxInclusiveCFacetDuration(XPlus::Duration facetValue=Duration(), bool fixed=false):
+    MaxInclusiveCFacetDuration(XPlus::Duration facetValue=XPlus::Duration(), bool fixed=false):
       ConstrainingFacetBase(CF_MAXINCLUSIVE, fixed),
       DurationCFacet(CF_MAXINCLUSIVE, facetValue, fixed)
     { }
@@ -577,7 +568,7 @@ namespace XMLSchema
 
   struct MaxExclusiveCFacetDuration : public DurationCFacet
   {
-    MaxExclusiveCFacetDuration(XPlus::Duration facetValue=Duration(), bool fixed=false):
+    MaxExclusiveCFacetDuration(XPlus::Duration facetValue=XPlus::Duration(), bool fixed=false):
       ConstrainingFacetBase(CF_MAXEXCLUSIVE, fixed),
       DurationCFacet(CF_MAXEXCLUSIVE, facetValue, fixed)
     { }
@@ -585,7 +576,7 @@ namespace XMLSchema
 
   struct MinInclusiveCFacetDuration : public DurationCFacet
   {
-    MinInclusiveCFacetDuration(XPlus::Duration facetValue=Duration(), bool fixed=false):
+    MinInclusiveCFacetDuration(XPlus::Duration facetValue=XPlus::Duration(), bool fixed=false):
       ConstrainingFacetBase(CF_MININCLUSIVE, fixed),
       DurationCFacet(CF_MININCLUSIVE, facetValue, fixed)
     { }
@@ -593,7 +584,7 @@ namespace XMLSchema
 
   struct MinExclusiveCFacetDuration : public DurationCFacet
   {
-    MinExclusiveCFacetDuration(XPlus::Duration facetValue=Duration(), bool fixed=false):
+    MinExclusiveCFacetDuration(XPlus::Duration facetValue=XPlus::Duration(), bool fixed=false):
       ConstrainingFacetBase(CF_MINEXCLUSIVE, fixed),
       DurationCFacet(CF_MINEXCLUSIVE, facetValue, fixed)
     { }

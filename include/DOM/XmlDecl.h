@@ -23,8 +23,6 @@
 #include "XPlus/TextEncoding.h"
 #include "DOM/DOMCommonInc.h"
 
-using namespace XPlus;
-
 namespace DOM
 {
 
@@ -50,7 +48,7 @@ namespace DOM
     public:
 
       XmlDecl(eXmlVersion version=XML_VERSION_1_0, 
-          TextEncoding::eTextEncoding enc= TextEncoding::UNSPECIFIED,
+          XPlus::TextEncoding::eTextEncoding enc= XPlus::TextEncoding::UNSPECIFIED,
           eStandalone standalone = STANDALONE_UNSPECIFIED  
           );
 
@@ -81,14 +79,14 @@ namespace DOM
       }
 
 
-      inline TextEncoding::eTextEncoding encoding() const {
+      inline XPlus::TextEncoding::eTextEncoding encoding() const {
         return _encoding.toEnum(); 
       }
       inline string encodingString() const {
         return _encoding.toString(); 
       }
-      inline void encoding(TextEncoding::eTextEncoding encEnum) {
-        _encoding = TextEncoding(encEnum);
+      inline void encoding(XPlus::TextEncoding::eTextEncoding encEnum) {
+        _encoding = XPlus::TextEncoding(encEnum);
       }
 
       void print() const
@@ -114,7 +112,7 @@ namespace DOM
     private:
 
       eXmlVersion      _version;
-      TextEncoding     _encoding;
+      XPlus::TextEncoding     _encoding;
       eStandalone      _standalone;
   };
 }

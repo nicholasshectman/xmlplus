@@ -28,7 +28,6 @@ extern "C" {
 #include "XPlus/LList.h" 
 #include "XPlus/AutoPtr.h" 
 #include "XPlus/UString.h" 
-using namespace XPlus;
 
 namespace DOM
 {
@@ -84,66 +83,66 @@ namespace DOM
 
   /* typedefs related to DOM impl */
   typedef XML_Char DOMChar;
-  typedef AutoPtr<DOMChar> DOMCharPtr;
+  typedef XPlus::AutoPtr<DOMChar> DOMCharPtr;
   typedef DOMChar* DOMCharP;
   
-  typedef AutoPtr<CDATASection> CDATASectionPtr;
+  typedef XPlus::AutoPtr<CDATASection> CDATASectionPtr;
   typedef CDATASection* CDATASectionP;
 
-  typedef AutoPtr<CharacterData> CharacterDataPtr;
+  typedef XPlus::AutoPtr<CharacterData> CharacterDataPtr;
   typedef CharacterData* CharacterDataP;
 
-  typedef AutoPtr<Comment> CommentPtr;
+  typedef XPlus::AutoPtr<Comment> CommentPtr;
   typedef Comment* CommentP;
 
-  typedef AutoPtr<Document> DocumentPtr;
+  typedef XPlus::AutoPtr<Document> DocumentPtr;
   typedef Document* DocumentP;
 
-  typedef AutoPtr<DocumentFragment> DocumentFragmentPtr;
+  typedef XPlus::AutoPtr<DocumentFragment> DocumentFragmentPtr;
   typedef DocumentFragment* DocumentFragmentP;
 
-  typedef AutoPtr<DocumentType> DocumentTypePtr;
+  typedef XPlus::AutoPtr<DocumentType> DocumentTypePtr;
   typedef DocumentType* DocumentTypeP;
 
-  typedef AutoPtr<DOMException> DOMExceptionPtr;
+  typedef XPlus::AutoPtr<DOMException> DOMExceptionPtr;
   typedef DOMException* DOMExceptionP;
 
-  typedef AutoPtr<DOMImplementation> DOMImplementationPtr;
+  typedef XPlus::AutoPtr<DOMImplementation> DOMImplementationPtr;
   typedef DOMImplementation* DOMImplementationP;
   
-  typedef AutoPtr<Entity> EntityPtr;
+  typedef XPlus::AutoPtr<Entity> EntityPtr;
   typedef Entity* EntityP;
 
-  typedef AutoPtr<EntityRef> EntityRefPtr;
+  typedef XPlus::AutoPtr<EntityRef> EntityRefPtr;
   typedef EntityRef* EntityRefP;
 
-  typedef AutoPtr<NamedNodeMap> NamedNodeMapPtr;
+  typedef XPlus::AutoPtr<NamedNodeMap> NamedNodeMapPtr;
   typedef NamedNodeMap* NamedNodeMapP;
   
-  typedef AutoPtr<Node> NodePtr;
+  typedef XPlus::AutoPtr<Node> NodePtr;
   typedef Node* NodeP;
   
   typedef XPlus::LList<Node> NodeList;
   typedef NodeList* NodeListPtr;
   typedef NodeList* NodeListP;
  
-  typedef AutoPtr<Attribute> AttributePtr;
+  typedef XPlus::AutoPtr<Attribute> AttributePtr;
   typedef Attribute* AttributeP;
 
-  typedef AutoPtr<Element> ElementPtr;
+  typedef XPlus::AutoPtr<Element> ElementPtr;
   typedef Element* ElementP;
 
-  typedef AutoPtr<TextNode> TextNodePtr;
+  typedef XPlus::AutoPtr<TextNode> TextNodePtr;
   typedef TextNode* TextNodeP;
 
-  typedef AutoPtr<Notation> NotationPtr;
+  typedef XPlus::AutoPtr<Notation> NotationPtr;
   typedef Notation* NotationP;
 
-  typedef AutoPtr<PI> PIPtr;
+  typedef XPlus::AutoPtr<PI> PIPtr;
   typedef PI* PIP;
   
   typedef XPlus::UString DOMString;
-  typedef AutoPtr<DOMString> DOMStringPtr;
+  typedef XPlus::AutoPtr<DOMString> DOMStringPtr;
   //typedef DOMString* DOMStringPtr;
   typedef DOMString* DOMStringP;
 

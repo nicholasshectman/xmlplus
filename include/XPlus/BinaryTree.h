@@ -30,8 +30,6 @@ extern "C" {
 
 using namespace std;
 
-#include <assert.h>
-
 namespace XPlus
 {
   template <class T>
@@ -325,7 +323,7 @@ namespace XPlus
         return _root;  
       }
       
-      inline const list<TreeNodePtr>& getLeaves() const {
+      inline const std::list<TreeNodePtr>& getLeaves() const {
         return _leaves;  
       }
 
@@ -376,7 +374,7 @@ namespace XPlus
 
     protected:
       TreeNodePtr          _root;
-      list<TreeNodePtr>    _leaves;
+      std::list<TreeNodePtr>    _leaves;
 
       //postorder traverse
       void updateLeavesAfresh(TreeNodePtr node)
@@ -426,7 +424,7 @@ namespace XPlus
 
       bool updateLeavesOnParentGettingChild(TreeNodePtr& parentNode, TreeNodePtr& childNode)
       {
-        typename list<TreeNodePtr>::iterator cit = _leaves.begin();
+        typename std::list<TreeNodePtr>::iterator cit = _leaves.begin();
         for(; cit!=_leaves.end(); cit++)
         {
           const TreeNodePtr& mynode = *cit;
@@ -440,31 +438,30 @@ namespace XPlus
         return false;
       }
 
-      bool addNodeAsLeaf(TreeNodePtr node)
+      void addNodeAsLeaf(TreeNodePtr node)
       {
         _leaves.push_back(node);
-        return true;
       }
 
 
-      bool addNodeAsLeafAlongAnotherLeafNode(TreeNodePtr& referenceNode, TreeNodePtr& node, bool before=true)
+      void addNodeAsLeafAlongAnotherLeafNode(TreeNodePtr& referenceNode, TreeNodePtr& node, bool before=true)
       {
         if(referenceNode.isNull()) {
-          return addNodeAsLeaf(node);
+          addNodeAsLeaf(node);
+          return;
         }
 
-        typename list<TreeNodePtr>::iterator cit = _leaves.begin();
+        typename std::list<TreeNodePtr>::iterator cit = _leaves.begin();
         for(; cit!=_leaves.end(); cit++)
         {
           const TreeNodePtr& mynode = *cit;
           if(mynode.get() == referenceNode.get()) 
           {
-            typename list<TreeNodePtr>::iterator citNew = (before ? cit : ++cit);
+            typename std::list<TreeNodePtr>::iterator citNew = (before ? cit : ++cit);
             _leaves.insert(citNew, node);
-            return true;
+            return;
           }
         }
-        return false;
       }
 
   };

@@ -28,8 +28,6 @@
 #include "XPlus/XPlusObject.h"
 #include "XPlus/AutoPtr.h"
 
-using namespace std;
-
 // TODO NB:
 // 1. findNode disabled: find way to verify that the supplied "node"
 //    arg claimed to be part of list is actually part of the list
@@ -66,7 +64,7 @@ namespace XPlus
         cout << "} destructing LList:" << this << " END" << endl;
         */
         
-        typename map<TPtr, bool>::iterator it = _nodesMap.begin();
+        typename std::map<TPtr, bool>::iterator it = _nodesMap.begin();
         for( ; it != _nodesMap.end(); ++it ) {
           TPtr tptr = it->first;
           tptr->removedFromParentList(true);
@@ -75,7 +73,7 @@ namespace XPlus
 
       void print()
       {
-        typename map<TPtr, bool>::iterator it = _nodesMap.begin();
+        typename std::map<TPtr, bool>::iterator it = _nodesMap.begin();
         for( ; it != _nodesMap.end(); ++it ) {
           cout << "   nodeMap node:" << it->first << " name:" << *it->first->getNodeName() << endl;
         }
@@ -283,7 +281,7 @@ namespace XPlus
         refNode->duplicate();
         bool bDontFree = refNode->dontFree();
         refNode->dontFree(true);
-        typename map<TPtr, bool>::iterator it = _nodesMap.find(refNode);
+        typename std::map<TPtr, bool>::iterator it = _nodesMap.find(refNode);
         refNode->dontFree(bDontFree);
         if(it == _nodesMap.end()) {
           return NULL;
@@ -363,7 +361,7 @@ namespace XPlus
         node->duplicate();
         bool bDontFree = refNode->dontFree();
         refNode->dontFree(true);
-        typename map<TPtr, bool>::iterator it = _nodesMap.find(node);
+        typename std::map<TPtr, bool>::iterator it = _nodesMap.find(node);
         refNode->dontFree(bDontFree);
           
         refNode->removedFromParentList(true);
@@ -381,7 +379,7 @@ namespace XPlus
       T*                    _head;
       T*                    _tail;
       unsigned int          _size;
-      map<TPtr, bool>        _nodesMap;
+      std::map<TPtr, bool>        _nodesMap;
   };
 
 }

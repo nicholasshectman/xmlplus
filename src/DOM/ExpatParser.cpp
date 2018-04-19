@@ -69,7 +69,7 @@ namespace ExpatCB
     DOM::DOMStringP nsPrefix = NULL;
     DOM::DOMStringP localName = NULL;
     vector<DOM::DOMString> tokens;
-    tripletStr.tokenize(NSSEP, tokens);
+    tripletStr.tokenize(string(1, NSSEP), tokens);
     if( (tokens.size() > 3) || (tokens.size() ==0) ) {
       cerr << "incorrect element info for "
         << tripletStr.str() << endl;

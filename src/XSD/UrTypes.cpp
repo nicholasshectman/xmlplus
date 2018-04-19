@@ -1,6 +1,7 @@
 // This file is part of XmlPlus package
 // 
 // Copyright (C)   2010-2013   Satya Prakash Tripathi
+// Copyright (C)   2017-2018   Akamai Technologies
 //
 //
 // This program is free software: you can redistribute it and/or modify
@@ -31,6 +32,8 @@ extern "C" {
 }
 
 using namespace std;
+using namespace FSM;
+using namespace XPlus;
 using XPlus::Namespaces;
 
 XSD::MapWrapper  XSD::TypeDefinitionFactory::_map;
@@ -503,7 +506,7 @@ namespace XMLSchema
         throw XPlus::NullPointerException("createAttributeNS: localName is NULL");
       }
       
-      if(!value || (value->length() == 0) )
+      if(!value)
       {
         ostringstream err;
         err << "empty value for : " << formatNamespaceName(XsdEvent::ATTRIBUTE, nsUri, *localName);

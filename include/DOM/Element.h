@@ -42,7 +42,7 @@ namespace DOM
         Node* nextSibling=NULL
         );
 
-    Element() {cout << "DOM::Element::Element()\n";};
+    Element() {cout << "DOM::Element::Element()\n";}
 
     virtual ~Element() {}
     

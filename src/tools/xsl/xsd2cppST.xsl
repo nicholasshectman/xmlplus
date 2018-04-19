@@ -82,11 +82,6 @@ extern "C" {
 #include "XSD/xsdUtils.h"
 #include "DOM/DOMCommonInc.h"
 
-using namespace std;
-using namespace XPlus;
-using namespace DOM;
-using namespace XMLSchema;
-
 <xsl:call-template name="T_emit_cppNSBegin_for_nsUri"><xsl:with-param name="nsUri" select="$targetNsUri"/></xsl:call-template>
 
 namespace Types 
@@ -220,11 +215,6 @@ namespace Types
 #include "XSD/xsdUtils.h"
 #include "XSD/PrimitiveTypes.h"
 <xsl:call-template name="INCLUDELIST_OF_SIMPLETYPE_H"/>
-
-using namespace std;
-using namespace XPlus;
-using namespace DOM;
-using namespace XMLSchema;
 
 <xsl:call-template name="T_emit_cppNSBegin_for_nsUri"><xsl:with-param name="nsUri" select="$targetNsUri"/></xsl:call-template>
 
@@ -432,7 +422,7 @@ namespace Types
     </xsl:for-each>
 
     /// constructor  
-    <xsl:value-of select="$myCppType"/>(AnyTypeCreateArgs args):
+    <xsl:value-of select="$myCppType"/>(XMLSchema::Types::AnyTypeCreateArgs args):
       XMLSchema::Types::SimpleTypeUnionTmpl(args)
     {
       <xsl:if test="$isBuiltinDerivedType='true'">
@@ -576,7 +566,7 @@ namespace Types
 <xsl:template name="PARAM_INITIALIZATION_OF_MEMBERTYPE_INSIDE_UNION">
   <xsl:param name="token"/>
   <xsl:variable name="localPartToken"><xsl:call-template name="T_get_localPart_of_QName"><xsl:with-param name="qName" select="$token"/></xsl:call-template></xsl:variable>
-    ,_<xsl:value-of select="$localPartToken"/>_val(AnyTypeCreateArgs())
+    ,_<xsl:value-of select="$localPartToken"/>_val(XMLSchema::Types::AnyTypeCreateArgs())
 </xsl:template>
 
 
@@ -624,7 +614,7 @@ namespace Types
       <xsl:with-param name="stName" select="$token"/>
     </xsl:call-template>
   </xsl:variable>
-       _unionMembers.push_back(new <xsl:value-of select="$cppNSDeref"/>::<xsl:value-of select="$cppType"/>(AnyTypeCreateArgs()));
+       _unionMembers.push_back(new <xsl:value-of select="$cppNSDeref"/>::<xsl:value-of select="$cppType"/>(XMLSchema::Types::AnyTypeCreateArgs()));
 </xsl:template>
 
 
@@ -725,7 +715,7 @@ namespace Types
   {
   public:
     /// constructor  
-    <xsl:value-of select="$myCppType"/>(AnyTypeCreateArgs args)
+    <xsl:value-of select="$myCppType"/>(XMLSchema::Types::AnyTypeCreateArgs args)
     <xsl:choose>
       <xsl:when test="$baseCppType='anySimpleType'">
         : anySimpleType(args, PD_<xsl:call-template name="T_capitalize_all"><xsl:with-param name="subjStr" select="$simpleTypeName"/></xsl:call-template>)
@@ -745,7 +735,7 @@ namespace Types
       </xsl:call-template>
     
     <xsl:if test="$isBuiltinPrimType='true'">
-      this->allowedCFacets( CF_NONE <xsl:for-each select="*[local-name()='annotation']/*[local-name()='appinfo']/*[local-name()='hasFacet']"> | <xsl:call-template name="T_get_enumType_CFacet"><xsl:with-param name="facet" select="@name"/></xsl:call-template> </xsl:for-each> );
+      this->allowedCFacets( XMLSchema::CF_NONE <xsl:for-each select="*[local-name()='annotation']/*[local-name()='appinfo']/*[local-name()='hasFacet']"> | <xsl:call-template name="T_get_enumType_CFacet"><xsl:with-param name="facet" select="@name"/></xsl:call-template> </xsl:for-each> );
     </xsl:if>
       this->appliedCFacets( appliedCFacets() <xsl:for-each select="*[local-name()='restriction']/*[local-name() != 'simpleType' and local-name() != 'annotation']">| <xsl:call-template name="T_get_enumType_CFacet"><xsl:with-param name="facet" select="local-name(.)"/></xsl:call-template> </xsl:for-each> );
     }
@@ -760,7 +750,7 @@ namespace Types
       string strVal = typeToString(val);
         </xsl:when>
         <xsl:otherwise>
-      string strVal = toString&lt;<xsl:value-of select="$implType"/>&gt;(val);
+      string strVal = XPlus::toString&lt;<xsl:value-of select="$implType"/>&gt;(val);
         </xsl:otherwise>
       </xsl:choose>
       anySimpleType::stringValue(strVal);
@@ -796,7 +786,7 @@ namespace Types
       try {
       <xsl:choose>
         <xsl:when test="$hasBoundFacetSuffix='true'">
-          <xsl:value-of select="$boundFacetSuffix"/>&amp; valueAsBound = dynamic_cast&lt;<xsl:value-of select="$boundFacetSuffix"/>&amp;&gt;(_implValue);
+          XPlus::<xsl:value-of select="$boundFacetSuffix"/>&amp; valueAsBound = dynamic_cast&lt;XPlus::<xsl:value-of select="$boundFacetSuffix"/>&amp;&gt;(_implValue);
         if(valueAsBound > _maxInclusiveCFacet<xsl:value-of select="$boundFacetSuffix"/>.value()) 
         </xsl:when>
         <xsl:otherwise>
@@ -804,14 +794,14 @@ namespace Types
         </xsl:otherwise>
       </xsl:choose>
         {
-          throwFacetViolation(CF_MAXINCLUSIVE);
+          throwFacetViolation(XMLSchema::CF_MAXINCLUSIVE);
         }
       }
-      catch(DateTimeException&amp; ex) {
-        throwFacetViolation(CF_MAXINCLUSIVE, ex.rawMsg());
+      catch(XPlus::DateTimeException&amp; ex) {
+        throwFacetViolation(XMLSchema::CF_MAXINCLUSIVE, ex.rawMsg());
       }
       catch(XPlus::Exception&amp; ex) {
-        throwFacetViolation(CF_MAXINCLUSIVE);
+        throwFacetViolation(XMLSchema::CF_MAXINCLUSIVE);
       }
     }
       </xsl:if>
@@ -821,7 +811,7 @@ namespace Types
       try {
       <xsl:choose>
         <xsl:when test="$hasBoundFacetSuffix='true'">
-      <xsl:value-of select="$boundFacetSuffix"/>&amp; valueAsBound = dynamic_cast&lt;<xsl:value-of select="$boundFacetSuffix"/>&amp;&gt;(_implValue);
+      XPlus::<xsl:value-of select="$boundFacetSuffix"/>&amp; valueAsBound = dynamic_cast&lt;XPlus::<xsl:value-of select="$boundFacetSuffix"/>&amp;&gt;(_implValue);
         if(valueAsBound >= _maxExclusiveCFacet<xsl:value-of select="$boundFacetSuffix"/>.value()) 
         </xsl:when>
         <xsl:otherwise>
@@ -829,14 +819,14 @@ namespace Types
         </xsl:otherwise>
       </xsl:choose>
         {
-          throwFacetViolation(CF_MAXEXCLUSIVE);
+          throwFacetViolation(XMLSchema::CF_MAXEXCLUSIVE);
         }
       }
-      catch(DateTimeException&amp; ex) {
-        throwFacetViolation(CF_MAXINCLUSIVE, ex.rawMsg());
+      catch(XPlus::DateTimeException&amp; ex) {
+        throwFacetViolation(XMLSchema::CF_MAXINCLUSIVE, ex.rawMsg());
       }
       catch(XPlus::Exception&amp; ex) {
-        throwFacetViolation(CF_MAXEXCLUSIVE);
+        throwFacetViolation(XMLSchema::CF_MAXEXCLUSIVE);
       }
     }
       </xsl:if>
@@ -846,7 +836,7 @@ namespace Types
       try {
       <xsl:choose>
         <xsl:when test="$hasBoundFacetSuffix='true'">
-      <xsl:value-of select="$boundFacetSuffix"/>&amp; valueAsBound = dynamic_cast&lt;<xsl:value-of select="$boundFacetSuffix"/>&amp;&gt;(_implValue);
+      XPlus::<xsl:value-of select="$boundFacetSuffix"/>&amp; valueAsBound = dynamic_cast&lt;XPlus::<xsl:value-of select="$boundFacetSuffix"/>&amp;&gt;(_implValue);
         if(valueAsBound &lt; _minInclusiveCFacet<xsl:value-of select="$boundFacetSuffix"/>.value()) 
         </xsl:when>
         <xsl:otherwise>
@@ -854,14 +844,14 @@ namespace Types
         </xsl:otherwise>
       </xsl:choose>
         {
-          throwFacetViolation(CF_MININCLUSIVE);
+          throwFacetViolation(XMLSchema::CF_MININCLUSIVE);
         }
       }
-      catch(DateTimeException&amp; ex) {
-        throwFacetViolation(CF_MAXINCLUSIVE, ex.rawMsg());
+      catch(XPlus::DateTimeException&amp; ex) {
+        throwFacetViolation(XMLSchema::CF_MAXINCLUSIVE, ex.rawMsg());
       }
       catch(XPlus::Exception&amp; ex) {
-        throwFacetViolation(CF_MININCLUSIVE);
+        throwFacetViolation(XMLSchema::CF_MININCLUSIVE);
       }
     }
       </xsl:if>
@@ -871,7 +861,7 @@ namespace Types
       try {
       <xsl:choose>
         <xsl:when test="$hasBoundFacetSuffix='true'">
-      <xsl:value-of select="$boundFacetSuffix"/>&amp; valueAsBound = dynamic_cast&lt;<xsl:value-of select="$boundFacetSuffix"/>&amp;&gt;(_implValue);
+      XPlus::<xsl:value-of select="$boundFacetSuffix"/>&amp; valueAsBound = dynamic_cast&lt;XPlus::<xsl:value-of select="$boundFacetSuffix"/>&amp;&gt;(_implValue);
         if(valueAsBound &lt;= _minExclusiveCFacet<xsl:value-of select="$boundFacetSuffix"/>.value()) 
         </xsl:when>
         <xsl:otherwise>
@@ -879,14 +869,14 @@ namespace Types
         </xsl:otherwise>
       </xsl:choose>
         {
-          throwFacetViolation(CF_MINEXCLUSIVE);
+          throwFacetViolation(XMLSchema::CF_MINEXCLUSIVE);
         }
       }
-      catch(DateTimeException&amp; ex) {
-        throwFacetViolation(CF_MAXINCLUSIVE, ex.rawMsg());
+      catch(XPlus::DateTimeException&amp; ex) {
+        throwFacetViolation(XMLSchema::CF_MAXINCLUSIVE, ex.rawMsg());
       }
       catch(XPlus::Exception&amp; ex) {
-        throwFacetViolation(CF_MINEXCLUSIVE);
+        throwFacetViolation(XMLSchema::CF_MINEXCLUSIVE);
       }
     }
       </xsl:if>
@@ -898,7 +888,7 @@ namespace Types
       _implValue = stringToType(_value);
         </xsl:when>
         <xsl:otherwise>
-      _implValue = fromString&lt;<xsl:value-of select="$implType"/>&gt;(_value);
+      _implValue = XPlus::fromString&lt;<xsl:value-of select="$implType"/>&gt;(_value);
         </xsl:otherwise>
       </xsl:choose>
     }
@@ -931,7 +921,7 @@ namespace Types
   {
   public:
     /// constructor  
-    <xsl:value-of select="$myCppType"/>(AnyTypeCreateArgs args):
+    <xsl:value-of select="$myCppType"/>(XMLSchema::Types::AnyTypeCreateArgs args):
       <xsl:value-of select="$cppBaseTypeInferred"/>(args)
     {
       <xsl:if test="$isBuiltinDerivedType='true'">

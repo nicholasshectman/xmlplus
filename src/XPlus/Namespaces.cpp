@@ -19,6 +19,8 @@
 
 #include "XPlus/Namespaces.h"
 
+using namespace DOM;
+
 namespace XPlus
 {
   // namespace and attributes with 'xml' prefix

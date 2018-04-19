@@ -19,6 +19,8 @@
 
  #include "DOM/XmlDecl.h"
 
+using namespace XPlus;
+
 namespace DOM
 {
   string XmlDecl::v_1_0 = "1.0";

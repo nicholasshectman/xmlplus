@@ -20,6 +20,11 @@
 #include "XSD/xsdUtils.h"
 #include "XSD/TypeDefinitionFactory.h"
 
+using namespace std;
+using namespace XPlus;
+using namespace FSM;
+using namespace XMLSchema::Types;
+
 namespace XMLSchema
 {
   TDocument::~TDocument()

@@ -24,38 +24,36 @@
 #include <string>
 #include <map>
 
-using namespace std;
-
 namespace XPlus
 {
   class Exception : public std::exception
   {
     protected:
-      string                 _msg;
-      map<string, string>    _contextMap;
+      std::string                 _msg;
+      std::map<std::string, std::string>    _contextMap;
 
     public:
-     Exception(string msg="");
+     Exception(std::string msg="");
 
     virtual ~Exception() throw();
     
-    virtual string msg();
+    virtual std::string msg();
     
-    void msg(string str);
+    void msg(std::string str);
     
     void appendException(const Exception& ex);
     
-    void appendMsg(string str);
+    void appendMsg(std::string str);
     
-    string rawMsg() const;
+    std::string rawMsg() const;
 
-    void setContext(const string name, const double value);
-    void setContext(const string name, const string value);
+    void setContext(const std::string name, const double value);
+    void setContext(const std::string name, const std::string value);
   };
 
   class NullPointerException : public XPlus::Exception {
     public:
-      NullPointerException(string msg=""):
+      NullPointerException(std::string msg=""):
       Exception(msg)
     {
     }
@@ -63,7 +61,7 @@ namespace XPlus
 
   class IndexOutOfBoundsException : public XPlus::Exception {
     public:
-      IndexOutOfBoundsException(string msg=""):
+      IndexOutOfBoundsException(std::string msg=""):
       Exception(msg)
     {
     }
@@ -72,7 +70,7 @@ namespace XPlus
   class RegularExpressionException: public XPlus::Exception
   {
     public:
-      RegularExpressionException(string msg=""):
+      RegularExpressionException(std::string msg=""):
         Exception(msg)
       {
       }
@@ -80,7 +78,7 @@ namespace XPlus
   
   class NotFoundException : public XPlus::Exception {
     public:
-      NotFoundException(string msg=""):
+      NotFoundException(std::string msg=""):
       Exception(msg)
     {
     }
@@ -88,7 +86,7 @@ namespace XPlus
   
   class DateTimeException : public XPlus::Exception {
     public:
-      DateTimeException(string msg=""):
+      DateTimeException(std::string msg=""):
       Exception(msg)
     {
     }
@@ -96,7 +94,7 @@ namespace XPlus
   
   class RuntimeException : public XPlus::Exception {
     public:
-      RuntimeException(string msg=""):
+      RuntimeException(std::string msg=""):
       Exception(msg)
     {
     }
@@ -104,7 +102,7 @@ namespace XPlus
 
   class StringException : public XPlus::Exception {
     public:
-      StringException(string msg=""):
+      StringException(std::string msg=""):
       Exception(msg)
     {
     }

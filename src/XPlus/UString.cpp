@@ -156,15 +156,15 @@ namespace XPlus
 #endif
 
   // FIXME: this method has limitations on tokenization
-  // UTF-8: the UChar would be one byte, which  means only
-  //        single-char delimiters allowed
-  void UString::tokenize(UChar delim, vector<XPlus::UString>& tokens)
+  // multiple delimiters are supported,
+  // but each delimiter may only be one byte
+  void UString::tokenize(XPlus::UString delim, vector<XPlus::UString>& tokens)
   {
     unsigned int offset=0, count=0, len= this->length();
     for(unsigned int i=0; i<len; i++)
     {
       // 0 1 2| 3 4| 5 6 7
-      if(this->at(i) == delim) 
+      if(delim.find(this->at(i)) != npos) 
       {
         count = i - offset;
         XPlus::UString token = this->substr(offset, count); 

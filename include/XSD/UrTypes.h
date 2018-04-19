@@ -36,18 +36,13 @@
 #include "XSD/Facets.h"
 #include "XSD/Sampler.h"
 
-using namespace std;
-using namespace XPlus;
-using namespace FSM;
-
-
 namespace XMLSchema 
 {
   //fwd-declarations
   class TElement;
   class TDocument;
-  typedef AutoPtr<TElement> TElementPtr;
-  typedef AutoPtr<TDocument> TDocumentPtr;
+  typedef XPlus::AutoPtr<TElement> TElementPtr;
+  typedef XPlus::AutoPtr<TDocument> TDocumentPtr;
   typedef TElement* TElementP;
   typedef TDocument* TDocumentP;
 
@@ -216,7 +211,7 @@ namespace XMLSchema
       public:
 
         anyType(AnyTypeCreateArgs args, eAnyTypeUseCase anyTypeUseCase_ = ANY_TYPE);
-        anyType(){printf("anyType::anyType()\n");};
+        anyType() {printf("anyType::anyType()\n");}
 
         virtual ~anyType() {}
 
@@ -229,7 +224,7 @@ namespace XMLSchema
           return _ownerDoc;
         }
 
-        virtual TElement* createElementWithAttributes(DOMString* nsUri, DOMString* nsPrefix, DOMString* localName, vector<AttributeInfo>& attrVec);
+        virtual TElement* createElementWithAttributes(DOMString* nsUri, DOMString* nsPrefix, DOMString* localName, std::vector<AttributeInfo>& attrVec);
         virtual AttributeP createAttributeNS(DOMString* namespaceURI,
             DOMString* nsPrefix, DOMString* localName, DOMString* value);
         virtual void endElementNS(DOMString* nsURI, DOMString* nsPrefix, DOMString* localName);
@@ -286,7 +281,7 @@ namespace XMLSchema
         //debug
         void printTextNodes() 
         {
-          List<AutoPtr<TextNode> >::iterator it = _textNodes.begin();
+          XPlus::List<XPlus::AutoPtr<TextNode> >::iterator it = _textNodes.begin();
           unsigned int i=0;
           for(; it != _textNodes.end(); ++it, ++i) {
             cout << "text[" << i << "] = [" << *((*it)->getData()) << "]" << endl;
@@ -308,10 +303,10 @@ namespace XMLSchema
         const DOMString* xsiSchemaLocationValue();
         const DOMString* xsiNoNamespaceSchemaLocationValue();
 
-        inline AnyTypeFSM* fsm() {
+        inline FSM::AnyTypeFSM* fsm() {
           return _fsm;
         }
-        inline void replaceFsm(AnyTypeFSM* fsm) {
+        inline void replaceFsm(FSM::AnyTypeFSM* fsm) {
           //_fsm = NULL;
           _fsm = fsm;
         }
@@ -345,16 +340,16 @@ namespace XMLSchema
         DOM::Attribute* createDOMAttributeUnderCurrentElement(DOMString *attrName, DOMString *attrNsUri=NULL, DOMString *attrNsPrefix=NULL, DOMString *attrValue=NULL);
 
                         // --- xml --- //
-        DOM::Attribute* createAttributeXmlLang(FsmCbOptions& options);
-        DOM::Attribute* createAttributeXmlSpace(FsmCbOptions& options);
-        DOM::Attribute* createAttributeXmlBase(FsmCbOptions& options);
-        DOM::Attribute* createAttributeXmlId(FsmCbOptions& options);
+        DOM::Attribute* createAttributeXmlLang(FSM::FsmCbOptions& options);
+        DOM::Attribute* createAttributeXmlSpace(FSM::FsmCbOptions& options);
+        DOM::Attribute* createAttributeXmlBase(FSM::FsmCbOptions& options);
+        DOM::Attribute* createAttributeXmlId(FSM::FsmCbOptions& options);
 
                         // --- xsi --- //
-        DOM::Attribute* createAttributeXsiType(FsmCbOptions& options);
-        DOM::Attribute* createAttributeXsiNil(FsmCbOptions& options);
-        DOM::Attribute* createAttributeXsiSchemaLocation(FsmCbOptions& options);
-        DOM::Attribute* createAttributeXsiNoNamespaceSchemaLocation(FsmCbOptions& options);
+        DOM::Attribute* createAttributeXsiType(FSM::FsmCbOptions& options);
+        DOM::Attribute* createAttributeXsiNil(FSM::FsmCbOptions& options);
+        DOM::Attribute* createAttributeXsiSchemaLocation(FSM::FsmCbOptions& options);
+        DOM::Attribute* createAttributeXsiNoNamespaceSchemaLocation(FSM::FsmCbOptions& options);
 
         //
         //                 MEMBER VARIABLES 
@@ -377,12 +372,12 @@ namespace XMLSchema
         // T's ownerNode is elem1 Node
         Node*                           _ownerNode;
         TDocument*                      _ownerDoc;
-        AnyTypeFSMPtr                   _fsm;
+        FSM::AnyTypeFSMPtr                   _fsm;
 
         DOMString                       _value;
         bool                            _isSampleCreate;
 
-        List<AutoPtr<TextNode> >        _textNodes; 
+        XPlus::List<XPlus::AutoPtr<TextNode> >        _textNodes; 
         bool                            _isDefaultText;
 
         static std::map<DOMString, anyType*>   _qNameToTypeMap;
@@ -573,7 +568,7 @@ namespace XMLSchema
         MinExclusiveCFacetDuration      _minExclusiveCFacetDuration;
         MinInclusiveCFacetDuration      _minInclusiveCFacetDuration;
 
-        vector<ConstrainingFacetBase*> _allCFacets;
+        std::vector<ConstrainingFacetBase*> _allCFacets;
 
       private:
     

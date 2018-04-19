@@ -24,7 +24,6 @@
 #include "DOM/DOMAllInc.h"
 #include "DOM/Stack.h"
 
-using namespace std;
 using namespace DOM;
 
 class DOMParser : public ExpatParser
@@ -61,7 +60,7 @@ class DOMParser : public ExpatParser
                  const DOMString  *version,
                  const DOMString  *encoding,
                  int             standalone);
-    void onElementStart(void *userData, NodeNSTriplet nsTriplet, vector<AttributeInfo> attrVec); 
+    void onElementStart(void *userData, NodeNSTriplet nsTriplet, std::vector<AttributeInfo> attrVec); 
     void onAttribute(void *userData, AttributeInfo attrInfo);
     void onElementEnd(void *userData, NodeNSTriplet nsTriplet);
     void onNamespaceStart(void *userData, 
@@ -86,14 +85,12 @@ class DOMParser : public ExpatParser
     void onDocumentEnd(void *userData);
     void createAccumulatedTextNode();
 
-    inline bool beginOfCDATASection() {
+    inline void beginOfCDATASection() {
       _cdataInProgress = true;
-      return true;
     }
-    inline bool endOfCDATASection() {
+    inline void endOfCDATASection() {
       _cdataInProgress = false;
       resetCDATABuffer();
-      return true;
     }
     inline bool isCDATAInProgress() {
       return _cdataInProgress;

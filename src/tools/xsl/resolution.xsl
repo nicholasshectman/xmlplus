@@ -2017,10 +2017,10 @@ Schema Component: Simple Type Definition, a kind of Type Definition
 
   <xsl:variable name="contentTypeVarietyEnum">
     <xsl:choose>
-      <xsl:when test="$contentTypeVariety='element-only'">CONTENT_TYPE_VARIETY_ELEMENT_ONLY</xsl:when>
-      <xsl:when test="$contentTypeVariety='mixed'">CONTENT_TYPE_VARIETY_MIXED</xsl:when>
-      <xsl:when test="$contentTypeVariety='simple'">CONTENT_TYPE_VARIETY_SIMPLE</xsl:when>
-      <xsl:when test="$contentTypeVariety='empty'">CONTENT_TYPE_VARIETY_EMPTY</xsl:when>
+      <xsl:when test="$contentTypeVariety='element-only'">XMLSchema::Types::CONTENT_TYPE_VARIETY_ELEMENT_ONLY</xsl:when>
+      <xsl:when test="$contentTypeVariety='mixed'">XMLSchema::Types::CONTENT_TYPE_VARIETY_MIXED</xsl:when>
+      <xsl:when test="$contentTypeVariety='simple'">XMLSchema::Types::CONTENT_TYPE_VARIETY_SIMPLE</xsl:when>
+      <xsl:when test="$contentTypeVariety='empty'">XMLSchema::Types::CONTENT_TYPE_VARIETY_EMPTY</xsl:when>
     </xsl:choose>
   </xsl:variable>
   <xsl:value-of select="normalize-space($contentTypeVarietyEnum)"/>

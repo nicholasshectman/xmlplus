@@ -80,12 +80,12 @@ namespace XPlus
       
 
 #if defined(XPLUS_UNICODE_WCHAR_T)
-  UString(const wstring wstr);
+  UString(const std::wstring wstr);
 #endif
 
       UString(const char *buffer);
       UString(const char *buffer, unsigned int len);
-      UString(const string buffer);
+      UString(const std::string buffer);
 
 #if 0
       // AutoPtr requires:
@@ -112,8 +112,8 @@ namespace XPlus
         }
       }
 #endif
-      string str() const;
-      void tokenize(UChar delim, vector<XPlus::UString>& tokens);
+      std::string str() const;
+      void tokenize(XPlus::UString delim, std::vector<XPlus::UString>& tokens);
       unsigned int countCodePoints(TextEncoding::eTextEncoding enc=TextEncoding::UTF_8);
 
       void trimLeft(USTRING_CHAR_FN applicableToChar);

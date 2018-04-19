@@ -22,6 +22,7 @@
 #include "DOM/DOMException.h"
 
 using namespace DOM;
+using namespace XPlus;
 
 namespace DOM {
 

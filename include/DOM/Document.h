@@ -108,7 +108,7 @@ namespace DOM
       virtual void startDocument();
       virtual void endDocument();
       
-      virtual Element* createElementWithAttributes(DOMString* nsURI, DOMString* nsPrefix, DOMString* localName, vector<AttributeInfo>& attrVec);
+      virtual Element* createElementWithAttributes(DOMString* nsURI, DOMString* nsPrefix, DOMString* localName, std::vector<AttributeInfo>& attrVec);
 
       virtual Element* createElementNS(DOMString* nsURI, DOMString* nsPrefix, DOMString* localName);
       virtual void endElementNS(DOMString* nsURI, DOMString* nsPrefix, DOMString* localName);
@@ -158,10 +158,10 @@ namespace DOM
       const DOMString getNsPrefixForNsUriImplicit(const DOMString nsUriStr) const;
       DOMString* getDocumentElementNsUri() ;
       const DOMString* getDocumentElementNsUri() const;
-      inline const map<DOMString, DOMString>& getPrefixedNamespaces() const {
+      inline const std::map<DOMString, DOMString>& getPrefixedNamespaces() const {
         return _prefixedNamespaces; 
       }
-      inline const list<DOMString>& getUnprefixedNamespaces() const 
+      inline const std::list<DOMString>& getUnprefixedNamespaces() const 
       {
         return _unprefixedNamepspaces; 
       }
@@ -177,7 +177,7 @@ namespace DOM
       inline eXmlVersion version() const {
         return _xmlDecl.version(); 
       }
-      inline string versionString() const {
+      inline std::string versionString() const {
         return _xmlDecl.versionString(); 
       }
       inline void version(eXmlVersion versionEnum) {
@@ -187,20 +187,20 @@ namespace DOM
       inline eStandalone standalone() const {
         return _xmlDecl.standalone(); 
       }
-      inline string standaloneString() const {
+      inline std::string standaloneString() const {
         return _xmlDecl.standaloneString(); 
       }
       inline void standalone(eStandalone standaloneEnum) {
         _xmlDecl.standalone(standaloneEnum);
       }
 
-      inline TextEncoding::eTextEncoding encoding() const {
+      inline XPlus::TextEncoding::eTextEncoding encoding() const {
         return _xmlDecl.encoding(); 
       }
-      inline string encodingString() const {
+      inline std::string encodingString() const {
         return _xmlDecl.encodingString(); 
       }
-      inline void encoding(TextEncoding::eTextEncoding encEnum) {
+      inline void encoding(XPlus::TextEncoding::eTextEncoding encEnum) {
         _xmlDecl.encoding(encEnum);
       }
   };

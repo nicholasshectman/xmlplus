@@ -849,7 +849,7 @@ namespace <xsl:value-of select="$nsStr"/>{
   <xsl:variable name="cppPtrNsUri">  
     <xsl:choose>
       <xsl:when test="normalize-space($myNsUri)=''">NULL</xsl:when>
-      <xsl:otherwise>new DOMString("<xsl:value-of select="$myNsUri"/>")</xsl:otherwise>
+      <xsl:otherwise>new DOM::DOMString("<xsl:value-of select="$myNsUri"/>")</xsl:otherwise>
     </xsl:choose>
   </xsl:variable>  
   <xsl:value-of select="normalize-space($cppPtrNsUri)"/>
@@ -1634,7 +1634,7 @@ namespace <xsl:value-of select="$nsStr"/>{
 
 <xsl:template name="T_get_cppTypeSmartPtr_ElementAttr">
   <xsl:variable name="cppType"><xsl:call-template name="T_get_cppType_ElementAttr"/></xsl:variable>
-  <xsl:variable name="cppTypeSmartPtr">AutoPtr&lt;<xsl:value-of select="$cppType"/> &gt;</xsl:variable>
+  <xsl:variable name="cppTypeSmartPtr">XPlus::AutoPtr&lt;<xsl:value-of select="$cppType"/> &gt;</xsl:variable>
   <xsl:value-of select="normalize-space($cppTypeSmartPtr)"/>
 </xsl:template>
 
@@ -1743,7 +1743,7 @@ namespace <xsl:value-of select="$nsStr"/>{
           <xsl:when test="@maxOccurs">
             <xsl:choose>
               <xsl:when test="@maxOccurs='unbounded' or @maxOccurs &gt; '1'">
-                LList&lt;<xsl:value-of select="$cppTypePtrShort"/> &gt;
+                XPlus::LList&lt;<xsl:value-of select="$cppTypePtrShort"/> &gt;
               </xsl:when>
               <xsl:otherwise>
                 <xsl:value-of select="$cppTypePtrShort"/>
@@ -1813,7 +1813,7 @@ namespace <xsl:value-of select="$nsStr"/>{
     </xsl:choose>
   </xsl:variable>
   
-  <xsl:variable name="mgNameClass"><xsl:value-of select="normalize-space($mgName)"/><xsl:if test="$maxOccurGT1='true'">List</xsl:if></xsl:variable>
+  <xsl:variable name="mgNameClass"><xsl:value-of select="normalize-space($mgName)"/><xsl:if test="$maxOccurGT1='true'">XPlus::List</xsl:if></xsl:variable>
 
   <xsl:value-of select="normalize-space($mgNameClass)"/>
 </xsl:template>
@@ -1856,7 +1856,7 @@ namespace <xsl:value-of select="$nsStr"/>{
 
       <xsl:when test="$useCase='declaration'">
         <xsl:if test="local-name()='attribute'">
-          _<xsl:value-of select="$cppName"/>
+          _m_<xsl:value-of select="$cppName"/>
         </xsl:if> 
         <xsl:if test="local-name()='element'">
           <xsl:choose>      
@@ -1919,8 +1919,8 @@ namespace <xsl:value-of select="$nsStr"/>{
   <xsl:variable name="cppNameFunction"><xsl:call-template name="T_get_cppNameUseCase_ElementAttr"><xsl:with-param name="useCase" select="'functionName'"/></xsl:call-template></xsl:variable>
   <xsl:variable name="fsmType">
     <xsl:choose>
-      <xsl:when test="local-name()='attribute'">XsdEvent::ATTRIBUTE</xsl:when>
-      <xsl:when test="local-name()='element'">XsdEvent::ELEMENT_START</xsl:when>
+      <xsl:when test="local-name()='attribute'">FSM::XsdEvent::ATTRIBUTE</xsl:when>
+      <xsl:when test="local-name()='element'">FSM::XsdEvent::ELEMENT_START</xsl:when>
     </xsl:choose>
   </xsl:variable>
 
@@ -1934,7 +1934,7 @@ namespace <xsl:value-of select="$nsStr"/>{
   </xsl:variable>
 
   <xsl:variable name="out">
-    new XsdFSM&lt;<xsl:value-of select="$cppTypePtrShort"/>&gt;( Particle(<xsl:value-of select="$cppPtrNsUri"/>,  DOMString("<xsl:call-template name="T_get_name_ElementAttr"/>"), <xsl:call-template name="T_get_minOccurence"/>, <xsl:call-template name="T_get_maxOccurence"/><xsl:if test="$defaultOccur != 0">, <xsl:value-of select="$defaultOccur"/></xsl:if>), <xsl:value-of select="$fsmType"/>, new object_unary_mem_fun_t&lt;<xsl:value-of select="$cppTypePtrShort"/>, <xsl:value-of select="$schemaComponentName"/>, FsmCbOptions&gt;(<xsl:value-of select="$thisOrThat"/>, &amp;<xsl:value-of select="$schemaComponentName"/>::create_<xsl:value-of select="$cppNameFunction"/>))
+    new FSM::XsdFSM&lt;<xsl:value-of select="$cppTypePtrShort"/>&gt;( FSM::Particle(<xsl:value-of select="$cppPtrNsUri"/>,  DOM::DOMString("<xsl:call-template name="T_get_name_ElementAttr"/>"), <xsl:call-template name="T_get_minOccurence"/>, <xsl:call-template name="T_get_maxOccurence"/><xsl:if test="$defaultOccur != 0">, <xsl:value-of select="$defaultOccur"/></xsl:if>), <xsl:value-of select="$fsmType"/>, new XPlus::object_unary_mem_fun_t&lt;<xsl:value-of select="$cppTypePtrShort"/>, <xsl:value-of select="$schemaComponentName"/>, FSM::FsmCbOptions&gt;(<xsl:value-of select="$thisOrThat"/>, &amp;<xsl:value-of select="$schemaComponentName"/>::create_<xsl:value-of select="$cppNameFunction"/>))
   </xsl:variable> 
   <xsl:value-of select="normalize-space($out)"/>
 </xsl:template>
@@ -2678,7 +2678,7 @@ namespace <xsl:value-of select="$nsStr"/>{
   </xsl:if>  
   
   <xsl:variable name="enumType">
-    CF_<xsl:call-template name="T_capitalize_all"><xsl:with-param name="subjStr" select="$facet"/></xsl:call-template>
+    XMLSchema::CF_<xsl:call-template name="T_capitalize_all"><xsl:with-param name="subjStr" select="$facet"/></xsl:call-template>
   </xsl:variable>
   <xsl:value-of select="normalize-space($enumType)"/>
 </xsl:template>

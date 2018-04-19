@@ -266,9 +266,6 @@ targetNamespace="http://www.w3.org/2001/XMLSchema"
 #include "XSD/TypeDefinitionFactory.h"
 <xsl:call-template name="GEN_DOC_INCLUDE_H"/>
 
-using namespace XPlus;
-using namespace FSM;
-
 <xsl:call-template name="T_emit_cppNSBegin_for_nsUri"><xsl:with-param name="nsUri" select="$targetNsUri"/></xsl:call-template>
 
 class Document : public XMLSchema::TDocument
@@ -288,7 +285,7 @@ class Document : public XMLSchema::TDocument
   MEMBER_VAR <xsl:value-of select="$cppTypeUseCase"/><xsl:text> </xsl:text><xsl:value-of select="$cppNameUseCase"/>;
     <xsl:variable name="cppFsmName"><xsl:call-template name="T_get_cppFsmName_ElementAttr"/></xsl:variable>
     <xsl:variable name="cppTypePtrShort"><xsl:call-template name="T_get_cppTypeSmartPtrShort_ElementAttr"/></xsl:variable>
-  MEMBER_VAR AutoPtr&lt;XsdFSM&lt;<xsl:value-of select="$cppTypePtrShort"/>&gt; &gt;<xsl:text> </xsl:text><xsl:value-of select="$cppFsmName"/>;
+  MEMBER_VAR XPlus::AutoPtr&lt;FSM::XsdFSM&lt;<xsl:value-of select="$cppTypePtrShort"/>&gt; &gt;<xsl:text> </xsl:text><xsl:value-of select="$cppFsmName"/>;
   </xsl:for-each>  
 
   <!-- includes -->
@@ -373,7 +370,7 @@ class Document : public XMLSchema::TDocument
       <xsl:for-each select="*[local-name()='element']">
         <xsl:variable name="cppNameDocElem"><xsl:call-template name="T_get_cppName_ElementAttr"/></xsl:variable>
       DOMStringPtr nsUriPtr = <xsl:call-template name="T_get_cppPtr_targetNsUri_ElementAttr"/>;   
-      XsdEvent event(nsUriPtr, NULL, DOMString("<xsl:call-template name="T_get_name_ElementAttr"/>"), XsdEvent::ELEMENT_START);
+      FSM::XsdEvent event(nsUriPtr, NULL, DOMString("<xsl:call-template name="T_get_name_ElementAttr"/>"), FSM::XsdEvent::ELEMENT_START);
       if(this->createSample()) {
         event.cbOptions.isSampleCreate = true;
       }
@@ -391,7 +388,7 @@ class Document : public XMLSchema::TDocument
     <xsl:variable name="cppNameFunction"><xsl:call-template name="T_get_cppNameUseCase_ElementAttr"><xsl:with-param name="useCase" select="'functionName'"/></xsl:call-template></xsl:variable>
     <xsl:variable name="cppTypePtrShort"><xsl:call-template name="T_get_cppTypeSmartPtrShort_ElementAttr"/></xsl:variable>
     <xsl:variable name="cppPtrNsUri"><xsl:call-template name="T_get_cppPtr_targetNsUri_ElementAttr"/></xsl:variable>
-    XMARKER <xsl:value-of select="$cppFsmName"/> = new XsdFSM&lt;<xsl:value-of select="$cppTypePtrShort"/>&gt;( Particle(<xsl:value-of select="$cppPtrNsUri"/>,  DOMString("<xsl:call-template name="T_get_name_ElementAttr"/>"), <xsl:call-template name="T_get_minOccurence"/>, <xsl:call-template name="T_get_maxOccurence"/>),  XsdEvent::ELEMENT_START, new object_unary_mem_fun_t&lt;<xsl:value-of select="$cppTypePtrShort"/>, <xsl:value-of select="$schemaComponentName"/>, FsmCbOptions&gt;(this, &amp;<xsl:value-of select="$schemaComponentName"/>::create_<xsl:value-of select="$cppNameFunction"/>));
+    XMARKER <xsl:value-of select="$cppFsmName"/> = new FSM::XsdFSM&lt;<xsl:value-of select="$cppTypePtrShort"/>&gt;( FSM::Particle(<xsl:value-of select="$cppPtrNsUri"/>,  DOMString("<xsl:call-template name="T_get_name_ElementAttr"/>"), <xsl:call-template name="T_get_minOccurence"/>, <xsl:call-template name="T_get_maxOccurence"/>),  FSM::XsdEvent::ELEMENT_START, new XPlus::object_unary_mem_fun_t&lt;<xsl:value-of select="$cppTypePtrShort"/>, <xsl:value-of select="$schemaComponentName"/>, FSM::FsmCbOptions&gt;(this, &amp;<xsl:value-of select="$schemaComponentName"/>::create_<xsl:value-of select="$cppNameFunction"/>));
   </xsl:for-each>  
 
   <xsl:call-template name="ITERATE_SCHEMA_INCLUDES">
@@ -399,7 +396,7 @@ class Document : public XMLSchema::TDocument
   </xsl:call-template>  
 
   <xsl:if test="$cntTLE > 0">
-    XsdFsmBasePtr elemFsms[] = {
+    FSM::XsdFsmBasePtr elemFsms[] = {
     <xsl:for-each select="*[local-name()='element']">
       <xsl:variable name="cppFsmName"><xsl:call-template name="T_get_cppFsmName_ElementAttr"/></xsl:variable>
       <xsl:value-of select="$cppFsmName"/>,
@@ -409,11 +406,11 @@ class Document : public XMLSchema::TDocument
     </xsl:call-template>  
       NULL
     };
-    XsdFsmBasePtr fofElem = new XsdFsmOfFSMs(elemFsms, XsdFsmOfFSMs::CHOICE);
+    FSM::XsdFsmBasePtr fofElem = new FSM::XsdFsmOfFSMs(elemFsms, FSM::XsdFsmOfFSMs::CHOICE);
   </xsl:if>  
-    XsdFsmBasePtr docEndFsm = new XsdFSM&lt;void *&gt;(Particle(NULL, "", 1, 1), XsdEvent::DOCUMENT_END);
-    XsdFsmBasePtr ptrFsms[] = { <xsl:if test="$cntTLE > 0">fofElem, </xsl:if> docEndFsm, NULL };
-    _fsm = new XsdFsmOfFSMs(ptrFsms, XsdFsmOfFSMs::SEQUENCE);
+    FSM::XsdFsmBasePtr docEndFsm = new FSM::XsdFSM&lt;void *&gt;(FSM::Particle(NULL, "", 1, 1), FSM::XsdEvent::DOCUMENT_END);
+    FSM::XsdFsmBasePtr ptrFsms[] = { <xsl:if test="$cntTLE > 0">fofElem, </xsl:if> docEndFsm, NULL };
+    _fsm = new FSM::XsdFsmOfFSMs(ptrFsms, FSM::XsdFsmOfFSMs::SEQUENCE);
   }
 
   <xsl:if test="$cntTLE > 1">
@@ -424,7 +421,7 @@ class Document : public XMLSchema::TDocument
     {
     <xsl:variable name="cppNameUseCase"><xsl:call-template name="T_get_cppNameUseCase_ElementAttr"><xsl:with-param name="useCase" select="'declaration'"/></xsl:call-template></xsl:variable>
       if(!<xsl:value-of select="$cppNameUseCase"/>) {
-        XsdEvent event(<xsl:call-template name="T_get_cppPtr_targetNsUri_ElementAttr"/>, NULL, DOMString("<xsl:call-template name="T_get_name_ElementAttr"/>"), XsdEvent::ELEMENT_START);
+        FSM::XsdEvent event(<xsl:call-template name="T_get_cppPtr_targetNsUri_ElementAttr"/>, NULL, DOMString("<xsl:call-template name="T_get_name_ElementAttr"/>"), FSM::XsdEvent::ELEMENT_START);
         if(this-&gt;createSample()) {
           event.cbOptions.isSampleCreate = true;
         }
@@ -472,8 +469,6 @@ class Document : public XMLSchema::TDocument
 #define  __<xsl:value-of select="$cppTargetNSConcatStr"/>_<xsl:value-of select="$cppName"/>_H__
 <xsl:call-template name="GEN_INCLUDELIST_OF_ELEMENT_ATTR_H"/>
 
-using namespace XPlus;
-
 <xsl:call-template name="T_emit_cppNSBegin_for_nsUri"><xsl:with-param name="nsUri" select="$targetNsUri"/></xsl:call-template>
 
 <xsl:call-template name="DEFINE_ATTRIBUTE_H"/>
@@ -515,7 +510,6 @@ using namespace XPlus;
 
 <xsl:call-template name="GEN_INCLUDELIST_OF_ELEMENT_ATTR_H"/>
 
-using namespace XPlus;
 <xsl:call-template name="T_emit_cppNSBegin_for_nsUri"><xsl:with-param name="nsUri" select="$targetNsUri"/></xsl:call-template>
 
 <xsl:call-template name="DEFINE_ELEMENT_H"/>
@@ -644,7 +638,7 @@ class <xsl:value-of select="$cppName"/> : public XMLSchema::XmlElement&lt;XMLSch
   public:
 
     /// constructor for the element node
-    MEMBER_FN <xsl:value-of select="$cppName"/>(ElementCreateArgs args){};
+    MEMBER_FN <xsl:value-of select="$cppName"/>(XMLSchema::Types::ElementCreateArgs args);
 
   <xsl:for-each select="*[local-name()='complexType']">
     <xsl:call-template name="DEFINE_BODY_COMPLEXTYPE_H">
@@ -707,7 +701,7 @@ class <xsl:value-of select="$cppName"/> : public XMLSchema::XmlElement&lt;<xsl:v
   public:
 
   /// constructor for the element node
-  MEMBER_FN <xsl:value-of select="$elemName"/>(ElementCreateArgs args);
+  MEMBER_FN <xsl:value-of select="$elemName"/>(XMLSchema::Types::ElementCreateArgs args);
 
   <xsl:call-template name="DEFINE_BODY_COMPLEXTYPE_H">
     <xsl:with-param name="schemaComponentName" select="$elemName"/>
@@ -757,7 +751,7 @@ class <xsl:value-of select="$cppName"/> : public XMLSchema::XmlElement&lt;<xsl:v
   public:
 
   /// constructor for the element node
-  MEMBER_FN <xsl:value-of select="$elemName"/>(ElementCreateArgs args);
+  MEMBER_FN <xsl:value-of select="$elemName"/>(XMLSchema::Types::ElementCreateArgs args);
 
   <xsl:call-template name="DEFINE_BODY_COMPLEXTYPE_H">
     <xsl:with-param name="schemaComponentName" select="$elemName"/>
@@ -823,7 +817,7 @@ class <xsl:value-of select="$cppName"/> : public XMLSchema::XmlElement&lt;<xsl:v
   public:
 
   /// constructor for the element node
-  MEMBER_FN <xsl:value-of select="$elemName"/>(ElementCreateArgs args);
+  MEMBER_FN <xsl:value-of select="$elemName"/>(XMLSchema::Types::ElementCreateArgs args);
 
   <xsl:call-template name="DEFINE_BODY_COMPLEXTYPE_H">
     <xsl:with-param name="schemaComponentName" select="$elemName"/>
@@ -911,7 +905,7 @@ class <xsl:value-of select="$cppName"/> : public XMLSchema::XmlElement&lt;<xsl:v
   public:
   
   /// constructor for the element node
-  MEMBER_FN <xsl:value-of select="$elemName"/>(ElementCreateArgs args);
+  MEMBER_FN <xsl:value-of select="$elemName"/>(XMLSchema::Types::ElementCreateArgs args);
 
   <xsl:call-template name="DEFINE_BODY_COMPLEXTYPE_H">
     <xsl:with-param name="schemaComponentName" select="$elemName"/>
@@ -1013,9 +1007,6 @@ class <xsl:value-of select="$cppName"/> : public XMLSchema::XmlElement&lt;<xsl:v
     <xsl:variable name="hdrName" select="concat($cppTargetNSDirChain, '/Types/', $transformedToken, '.h')" />
 #include "<xsl:value-of select="$hdrName"/>"    
   </xsl:for-each>
-
-using namespace XPlus;
-
 
 #endif 
   </xsl:document>

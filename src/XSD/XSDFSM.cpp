@@ -1,6 +1,7 @@
 // This file is part of XmlPlus package
 // 
 // Copyright (C)   2010-2013   Satya Prakash Tripathi
+// Copyright (C)   2017-2018   Akamai Technologies
 //
 //
 // This program is free software: you can redistribute it and/or modify
@@ -18,6 +19,8 @@
 //
 
 #include "XSD/XSDFSM.h"
+
+using namespace XPlus;
 
 namespace FSM {
 
@@ -393,9 +396,6 @@ bool XsdFsmOfFSMs::processEventAll(XsdEvent& event)
   {
     if(i>0) {
       _allFSMs[i-1]->finish();
-    }
-    if(isFsmDirty(i)) {
-      continue;
     }
     XsdFsmBasePtr fsm = _allFSMs[i];
     if(fsm->processEvent(event)) {

@@ -4,6 +4,7 @@
 // This file is part of XmlPlus package
 // 
 // Copyright (C)   2010-2013   Satya Prakash Tripathi
+// Copyright (C)   2017-2018   Akamai Technologies
 //
 //
 // This program is free software: you can redistribute it and/or modify
@@ -42,8 +43,6 @@ targetNamespace="http://www.w3.org/2001/XMLSchema"
 #include "XSD/TypeDefinitionFactory.h"
 
 <xsl:call-template name="GEN_INCLUDELIST_OF_COMPLEXTYPE_SIMPLETYPE_INCLUDE_H"/>
-using namespace XPlus; 
-
 
 <xsl:call-template name="T_emit_cppNSBegin_for_nsUri"><xsl:with-param name="nsUri" select="$targetNsUri"/></xsl:call-template>
 namespace Types 
@@ -84,14 +83,14 @@ class <xsl:value-of select="$cppName"/> : public XMLSchema::Types::anyType
 {
   public:
   //constructor
-  <xsl:value-of select="$cppName"/>(AnyTypeCreateArgs args);
+  <xsl:value-of select="$cppName"/>(XMLSchema::Types::AnyTypeCreateArgs args);
 
   <xsl:call-template name="DEFINE_BODY_COMPLEXTYPE_H">
     <xsl:with-param name="schemaComponentName" select="$schemaComponentName"/>
   </xsl:call-template>  
 
   private:
-  static XSD::TypeDefinitionFactoryTmpl&lt;XmlElement&lt;<xsl:value-of select="$cppName"/>&gt; &gt;   s_typeRegistry;
+  static XSD::TypeDefinitionFactoryTmpl&lt;XMLSchema::XmlElement&lt;<xsl:value-of select="$cppName"/>&gt; &gt;   s_typeRegistry;
 }; //end class <xsl:value-of select="$cppName"/>
 </xsl:template>
 
@@ -246,14 +245,14 @@ class <xsl:value-of select="$cppName"/> : public <xsl:value-of select="$baseCppT
 {
   public:
   //constructor
-  <xsl:value-of select="$cppName"/>(AnyTypeCreateArgs args);
+  <xsl:value-of select="$cppName"/>(XMLSchema::Types::AnyTypeCreateArgs args);
 
   <xsl:call-template name="DEFINE_BODY_COMPLEXTYPE_H">
     <xsl:with-param name="schemaComponentName" select="$schemaComponentName"/>
   </xsl:call-template>
 
   private:
-  static XSD::TypeDefinitionFactoryTmpl&lt;XmlElement&lt;<xsl:value-of select="$cppName"/>&gt; &gt;   s_typeRegistry;
+  static XSD::TypeDefinitionFactoryTmpl&lt;XMLSchema::XmlElement&lt;<xsl:value-of select="$cppName"/>&gt; &gt;   s_typeRegistry;
 }; //end class <xsl:value-of select="$cppName"/>
 
 </xsl:template>
@@ -296,14 +295,14 @@ class <xsl:value-of select="$cppName"/> : public <xsl:value-of select="$cppNSDer
 
   public:
   //constructor
-  <xsl:value-of select="$cppName"/>(AnyTypeCreateArgs args);
+  <xsl:value-of select="$cppName"/>(XMLSchema::Types::AnyTypeCreateArgs args);
 
   <xsl:call-template name="DEFINE_BODY_COMPLEXTYPE_H">
     <xsl:with-param name="schemaComponentName" select="$schemaComponentName"/>
   </xsl:call-template>
   
   private:
-  static XSD::TypeDefinitionFactoryTmpl&lt;XmlElement&lt;<xsl:value-of select="$cppName"/>&gt; &gt;   s_typeRegistry;
+  static XSD::TypeDefinitionFactoryTmpl&lt;XMLSchema::XmlElement&lt;<xsl:value-of select="$cppName"/>&gt; &gt;   s_typeRegistry;
 
 }; //end class <xsl:value-of select="$cppName"/>
 
@@ -336,14 +335,14 @@ class <xsl:value-of select="$cppName"/> : public <xsl:value-of select="$cppNSDer
 {
   public:
   //constructor
-  <xsl:value-of select="$cppName"/>(AnyTypeCreateArgs args);
+  <xsl:value-of select="$cppName"/>(XMLSchema::Types::AnyTypeCreateArgs args);
 
   <xsl:call-template name="DEFINE_BODY_COMPLEXTYPE_H">
     <xsl:with-param name="schemaComponentName" select="$schemaComponentName"/>
   </xsl:call-template>  
 
   private:
-  static XSD::TypeDefinitionFactoryTmpl&lt;XmlElement&lt;<xsl:value-of select="$cppName"/>&gt; &gt;   s_typeRegistry;
+  static XSD::TypeDefinitionFactoryTmpl&lt;XMLSchema::XmlElement&lt;<xsl:value-of select="$cppName"/>&gt; &gt;   s_typeRegistry;
 }; //end class <xsl:value-of select="$cppName"/>
 </xsl:template>
 
@@ -377,10 +376,8 @@ class <xsl:value-of select="$cppName"/> : public <xsl:value-of select="$cppNSDer
   
   <xsl:choose>
     <xsl:when test="*[local-name()='complexType'] and not($isGlobal='true')">
+  /// forward declaration needed for pointers below:
   class <xsl:value-of select="$cppName"/>;
-    </xsl:when>
-    <xsl:when test="*[local-name()='simpleType'] and not($isGlobal='true')">
-  class _<xsl:value-of select="$cppName"/>;
     </xsl:when>
   </xsl:choose>
 
@@ -419,6 +416,11 @@ XML Representation Summary: complexType Element Information Item
     <xsl:with-param name="mode" select="'checks_on_schema_component'"/>
     <xsl:with-param name="schemaComponentName" select="$schemaComponentName"/>
   </xsl:call-template>  
+
+  //types which this class needs, as INNER CLASSES
+  <xsl:call-template name="DEFINE_TYPES_LEVEL1COMPLEXTYPE_NEEDS_H"/>
+  //types which this class needs, as INNER CLASSES : END
+
   <xsl:call-template name="RUN_FSM_COMPLEXTYPE_CONTENT">
     <xsl:with-param name="mode" select="'typedefinition'"/>
     <xsl:with-param name="schemaComponentName" select="$schemaComponentName"/>
@@ -516,13 +518,13 @@ XML Representation Summary: complexType Element Information Item
 
   protected:
   
-  XsdAllFsmOfFSMsPtr   _fsmAttrs;   
-  XsdFsmBasePtr        _fsmElems;   
+  FSM::XsdAllFsmOfFSMsPtr   _fsmAttrs;   
+  FSM::XsdFsmBasePtr        _fsmElems;   
   
   <!-- MGs/MGDs which are direct children of the complexType  -->
   <xsl:for-each select="*[local-name()='choice' or local-name()='sequence' or local-name()='all']">  
     <xsl:variable name="mgName"><xsl:call-template name="T_get_cppName_mg"/></xsl:variable>
-  AutoPtr&lt;<xsl:value-of select="$mgName"/>&gt; _<xsl:value-of select="$mgName"/>;
+  XPlus::AutoPtr&lt;<xsl:value-of select="$mgName"/>&gt; _<xsl:value-of select="$mgName"/>;
     <xsl:text>
     </xsl:text>
   </xsl:for-each>
@@ -530,7 +532,7 @@ XML Representation Summary: complexType Element Information Item
   <!-- MGs/MGDs which are children of the complexType through complexContent/restriction|extension/ -->
   <xsl:for-each select="*[local-name()='complexContent']/*[local-name()='extension' or local-name()='restriction']/*[local-name()='choice' or local-name()='sequence' or local-name()='all']">  
     <xsl:variable name="mgName"><xsl:call-template name="T_get_cppName_mg"/></xsl:variable>
-  AutoPtr&lt;<xsl:value-of select="$mgName"/>&gt; _<xsl:value-of select="$mgName"/>;
+  XPlus::AutoPtr&lt;<xsl:value-of select="$mgName"/>&gt; _<xsl:value-of select="$mgName"/>;
     <xsl:text>
     </xsl:text>
   </xsl:for-each>
@@ -549,12 +551,6 @@ XML Representation Summary: complexType Element Information Item
     <xsl:with-param name="schemaComponentName" select="$schemaComponentName"/>
   </xsl:call-template>  
 
-public:
-
-  //types which this class needs, as INNER CLASSES
-  <xsl:call-template name="DEFINE_TYPES_LEVEL1COMPLEXTYPE_NEEDS_H"/>
-  //types which this class needs, as INNER CLASSES : END
-
 </xsl:template>
 
 
@@ -569,7 +565,7 @@ public:
   
   <xsl:for-each select="*[local-name()='choice' or local-name()='sequence' or local-name()='all']">  
 
-  <xsl:variable name="cppFsmClass"><xsl:choose><xsl:when test="local-name()='sequence'">XsdSequenceFsmOfFSMs</xsl:when><xsl:when test="local-name()='choice'">XsdChoiceFsmOfFSMs</xsl:when><xsl:when test="local-name()='all'">XsdAllFsmOfFSMs</xsl:when></xsl:choose></xsl:variable>
+  <xsl:variable name="cppFsmClass"><xsl:choose><xsl:when test="local-name()='sequence'">FSM::XsdSequenceFsmOfFSMs</xsl:when><xsl:when test="local-name()='choice'">FSM::XsdChoiceFsmOfFSMs</xsl:when><xsl:when test="local-name()='all'">FSM::XsdAllFsmOfFSMs</xsl:when></xsl:choose></xsl:variable>
     <xsl:variable name="minOccurence"><xsl:call-template name="T_get_minOccurence"/></xsl:variable>
     <xsl:variable name="maxOccurence"><xsl:call-template name="T_get_maxOccurence"/></xsl:variable>
     <xsl:variable name="maxOccurGT1"><xsl:call-template name="T_is_maxOccurence_gt_1"/></xsl:variable>
@@ -597,7 +593,7 @@ public:
 
   <!-- mg list -->
   <xsl:if test="$maxOccurGT1='true'">
-  struct <xsl:value-of select="$mgNameCpp"/> : public XsdFsmArray
+  struct <xsl:value-of select="$mgNameCpp"/> : public FSM::XsdFsmArray
   {
   </xsl:if>
   
@@ -629,7 +625,7 @@ public:
 
       <xsl:variable name="returnType">
         <xsl:choose>
-          <xsl:when test="$maxOccurGT1Child='true'">List&lt;<xsl:value-of select="$cppTypeSmartPtrShort"/>&gt;</xsl:when>
+          <xsl:when test="$maxOccurGT1Child='true'">XPlus::List&lt;<xsl:value-of select="$cppTypeSmartPtrShort"/>&gt;</xsl:when>
           <xsl:otherwise><xsl:value-of select="$cppTypePtrShort"/></xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
@@ -820,7 +816,7 @@ public:
 
   private:  
 
-    inline XsdFsmBase* clone() const {
+    inline FSM::XsdFsmBase* clone() const {
       return new <xsl:value-of select="$mgNameSingularCpp"/>(*this);
     }
 
@@ -982,6 +978,15 @@ public:
 
   <xsl:choose>
 
+    <xsl:when test="$mode='define_anonymous_member_element_attr'">
+      <xsl:if test="$localName='element' and *[local-name()='complexType' or local-name()='simpleType']">
+        <xsl:call-template name="DEFINE_ELEMENT_H"/>
+      </xsl:if>
+      <xsl:if test="$localName='attribute' and *[local-name()='simpleType']">
+        <xsl:call-template name="DEFINE_ATTRIBUTE_H"/>
+      </xsl:if>
+    </xsl:when>
+
     <xsl:when test="$mode='typedefinition'">
       <xsl:if test="$multiples='true'">
 #ifndef __<xsl:value-of select="$schemaComponentName"/>_<xsl:value-of select="$cppNameFunction"/>_typedefs
@@ -1015,7 +1020,7 @@ public:
         <xsl:when test="$localName='element'">
           <xsl:choose>
             <xsl:when test="$maxOccurGT1Node='true' or $isUnderSingularMgNesting='false'">
-  MEMBER_VAR List&lt;<xsl:value-of select="$cppTypePtrShort"/>&gt;<xsl:text> </xsl:text><xsl:value-of select="$cppNameDeclPlural"/>;
+  MEMBER_VAR XPlus::List&lt;<xsl:value-of select="$cppTypePtrShort"/>&gt;<xsl:text> </xsl:text><xsl:value-of select="$cppNameDeclPlural"/>;
             </xsl:when>
             <xsl:when test="$maxOccurGT1Node='false' and $isUnderSingularMgNesting='true'">
   MEMBER_VAR <xsl:value-of select="$cppTypePtrShort"/><xsl:text> </xsl:text><xsl:value-of select="$cppNameUseCase"/>;
@@ -1068,15 +1073,6 @@ public:
       </xsl:if>    
     </xsl:when>    
 
-    <xsl:when test="$mode='define_anonymous_member_element_attr'">
-      <xsl:if test="$localName='element' and *[local-name()='complexType' or local-name()='simpleType']">
-        <xsl:call-template name="DEFINE_ELEMENT_H"/>
-      </xsl:if>
-      <xsl:if test="$localName='attribute' and *[local-name()='simpleType']">
-        <xsl:call-template name="DEFINE_ATTRIBUTE_H"/>
-      </xsl:if>
-    </xsl:when>
-
     <xsl:when test="$mode='define_member_element_fns'">
       <xsl:if test="$multiples='true'">
 #ifndef __<xsl:value-of select="$schemaComponentName"/>_<xsl:value-of select="$cppNameFunction"/>_member_elems_fns
@@ -1125,7 +1121,7 @@ public:
 <xsl:template name="DECL_PVT_FNS_FOR_MEMBER_ELEMENT_OR_ATTRIBUTE_H">
   <xsl:variable name="cppTypeSmartPtrShort"><xsl:call-template name="T_get_cppTypeSmartPtrShort_ElementAttr"/></xsl:variable>
   <xsl:variable name="cppNameFunction"><xsl:call-template name="T_get_cppNameUseCase_ElementAttr"><xsl:with-param name="useCase" select="'functionName'"/></xsl:call-template></xsl:variable>
-  MEMBER_FN <xsl:value-of select="$cppTypeSmartPtrShort"/><xsl:text> </xsl:text>create_<xsl:value-of select="$cppNameFunction"/>(FsmCbOptions&amp; options);
+  MEMBER_FN <xsl:value-of select="$cppTypeSmartPtrShort"/><xsl:text> </xsl:text>create_<xsl:value-of select="$cppNameFunction"/>(FSM::FsmCbOptions&amp; options);
 </xsl:template>
 
 
@@ -1179,7 +1175,7 @@ public:
   ///  For vector-element with QName "<xsl:value-of select="$expandedQName"/>" :
   ///  \n Returns the list of the element nodes
   ///  @return the list of element nodes fetched
-  MEMBER_FN List&lt;<xsl:value-of select="$cppTypeSmartPtrShort"/>&gt;<xsl:text> </xsl:text><xsl:value-of select="$localName"/>s_<xsl:value-of select="$cppNameFunction"/>();
+  MEMBER_FN XPlus::List&lt;<xsl:value-of select="$cppTypeSmartPtrShort"/>&gt;<xsl:text> </xsl:text><xsl:value-of select="$localName"/>s_<xsl:value-of select="$cppNameFunction"/>();
 
   ///  For vector-element with QName "<xsl:value-of select="$expandedQName"/>" :
   ///  \n Returns the element node at supplied index
@@ -1268,7 +1264,7 @@ public:
 
     <xsl:variable name="returnType">
       <xsl:choose>
-        <xsl:when test="$maxOccurGT1Node">List&lt;<xsl:value-of select="$cppTypeSmartPtrShort"/>&gt;</xsl:when>
+        <xsl:when test="$maxOccurGT1Node">XPlus::List&lt;<xsl:value-of select="$cppTypeSmartPtrShort"/>&gt;</xsl:when>
         <xsl:otherwise><xsl:value-of select="$cppTypePtrShort"/></xsl:otherwise>
       </xsl:choose>
     </xsl:variable>

@@ -19,6 +19,8 @@
 
 #include "XSD/FSM.h"
 
+using namespace XPlus;
+
 namespace FSM
 {
   GraphFSM::GraphFSM(vector<ActionEdge>& transitions, vector<int>& finalStates):

@@ -24,30 +24,26 @@
 #include "XSD/UrTypes.h"
 #include "XPlus/Exception.h"
 
-using namespace std;
-using namespace XMLSchema::Types;
-
-
 namespace XSD
 {
   struct StructCreateAttrThroughFsm
   {
-    DOMString*    tagName;
-    DOMString*    nsUri;
-    DOMString*    nsPrefix;
+    DOM::DOMString*    tagName;
+    DOM::DOMString*    nsUri;
+    DOM::DOMString*    nsPrefix;
     Element*      ownerElem;
-    TDocument*    ownerDoc;
-    XsdFsmBase*   fsm;
-    FsmCbOptions  options;
+    XMLSchema::TDocument*    ownerDoc;
+    FSM::XsdFsmBase*   fsm;
+    FSM::FsmCbOptions  options;
 
     StructCreateAttrThroughFsm(
-                              DOMString*    tagName_,
-                              DOMString*    nsUri_,
-                              DOMString*    nsPrefix_,
+                              DOM::DOMString*    tagName_,
+                              DOM::DOMString*    nsUri_,
+                              DOM::DOMString*    nsPrefix_,
                               Element*      ownerElem_,
-                              TDocument*    ownerDoc_,
-                              XsdFsmBase*   fsm_,
-                              FsmCbOptions  options_
+                              XMLSchema::TDocument*    ownerDoc_,
+                              FSM::XsdFsmBase*   fsm_,
+                              FSM::FsmCbOptions  options_
                               ):
                         tagName(tagName_),
                         nsUri(nsUri_),
@@ -64,18 +60,18 @@ namespace XSD
 
   struct StructCreateElementThroughFsm
   {
-    DOMString* tagName;
-    DOMString* nsUri;
-    DOMString* nsPrefix;
+    DOM::DOMString* tagName;
+    DOM::DOMString* nsUri;
+    DOM::DOMString* nsPrefix;
     Node*      parentNode;
-    TDocument* ownerDoc;
+    XMLSchema::TDocument* ownerDoc;
     
     bool         abstract;
     bool         nillable;
     bool         fixed;
 
-    XsdFsmBase*   fsm;
-    FsmCbOptions options;
+    FSM::XsdFsmBase*   fsm;
+    FSM::FsmCbOptions options;
 
     // following 2 applicable only when an <element> has 
     // a @type  attribute in xsd
@@ -84,18 +80,18 @@ namespace XSD
 
 
 
-    StructCreateElementThroughFsm(DOMString* tagName_,
-                              DOMString* nsUri_,
-                              DOMString* nsPrefix_,
+    StructCreateElementThroughFsm(DOM::DOMString* tagName_,
+                              DOM::DOMString* nsUri_,
+                              DOM::DOMString* nsPrefix_,
                               Node*      parentNode_,
-                              TDocument* ownerDoc_,
-                              XsdFsmBase*   fsm_,
-                              FsmCbOptions options_,
+                              XMLSchema::TDocument* ownerDoc_,
+                              FSM::XsdFsmBase*   fsm_,
+                              FSM::FsmCbOptions options_,
                               bool abstract_=false,
                               bool nillable_=false,
                               bool fixed_ = false,
-                              DOMString actualTypeNsUri_="",
-                              DOMString actualTypeName_="<unknown>"
+                              DOM::DOMString /* actualTypeNsUri_ */ = "",
+                              DOM::DOMString /* actualTypeName_ */ = "<unknown>"
                               ):
                         tagName(tagName_),
                         nsUri(nsUri_),
@@ -108,13 +104,11 @@ namespace XSD
                         fsm(fsm_),
                         options(options_)
       {
-        USED(actualTypeName_);
-        USED(actualTypeNsUri_);
       }
   };
 
 
-  template<typename T> XMLSchema::Types::anyType* createType(ElementCreateArgs args) 
+  template<typename T> XMLSchema::Types::anyType* createType(XMLSchema::Types::ElementCreateArgs args) 
   { 
     T* pT = NULL;
     try {
@@ -130,7 +124,7 @@ namespace XSD
     
   struct MapWrapper
   {
-    typedef map<string, XMLSchema::Types::anyType*(*)(ElementCreateArgs args)> map_type;
+    typedef std::map<std::string, XMLSchema::Types::anyType*(*)(XMLSchema::Types::ElementCreateArgs args)> map_type;
    
     MapWrapper():
      _pQNameToTypeMap(NULL)
@@ -158,17 +152,17 @@ namespace XSD
 
   struct TypeDefinitionFactory 
   {
-    typedef map<string, XMLSchema::Types::anyType*(*)(ElementCreateArgs args)> map_type;
+    typedef std::map<std::string, XMLSchema::Types::anyType*(*)(XMLSchema::Types::ElementCreateArgs args)> map_type;
     
-    TypeDefinitionFactory(const string& typeName, const string& typeNsUri):
+    TypeDefinitionFactory(const std::string& typeName, const std::string& typeNsUri):
       _name(typeName),
       _nsUri(typeNsUri)
     {
     }
 
-    static XMLSchema::Types::anyType* getTypeForQName(const string& typeName, const string& typeNsUri, ElementCreateArgs args) 
+    static XMLSchema::Types::anyType* getTypeForQName(const std::string& typeName, const std::string& typeNsUri, XMLSchema::Types::ElementCreateArgs args) 
     {
-      string key = createKeyForQNameToTypeMap(typeName, typeNsUri);
+      std::string key = createKeyForQNameToTypeMap(typeName, typeNsUri);
       map_type::iterator it = getMap()->find(key);
       if(it == getMap()->end()) {
         return NULL;
@@ -185,23 +179,23 @@ namespace XSD
       return _map.getMap(); 
     }
 
-    static const string createKeyForQNameToTypeMap(const string& typeName, const string& typeNsUri)
+    static const std::string createKeyForQNameToTypeMap(const std::string& typeName, const std::string& typeNsUri)
     {
-      ostringstream oss;
+      std::ostringstream oss;
       oss << "{" << typeNsUri << "}" << typeName;
       return oss.str();
     }
 
-    inline string name() {
+    inline std::string name() {
       return _name;
     }
     
-    inline string nsUri() {
+    inline std::string nsUri() {
       return _nsUri;
     }
 
-    string            _name;
-    string            _nsUri;
+    std::string            _name;
+    std::string            _nsUri;
 
     private:
     static MapWrapper  _map;
@@ -210,10 +204,10 @@ namespace XSD
   // create a templatized derivation of TypeDefinitionFactory
   template<typename T> struct TypeDefinitionFactoryTmpl : public TypeDefinitionFactory 
   { 
-    TypeDefinitionFactoryTmpl(const string& typeName, const string& typeNsUri):
+    TypeDefinitionFactoryTmpl(const std::string& typeName, const std::string& typeNsUri):
       TypeDefinitionFactory(typeName, typeNsUri)
     { 
-      string key = createKeyForQNameToTypeMap(typeName, typeNsUri);
+      std::string key = createKeyForQNameToTypeMap(typeName, typeNsUri);
       getMap()->insert(make_pair(key, &createType<T>));
     }
   };
@@ -236,15 +230,15 @@ namespace XSD
         }
       }
       
-      ElementCreateArgs args(t.tagName, t.nsUri, t.nsPrefix, t.ownerDoc, t.parentNode, prevSibl, nextSibl, t.abstract, t.nillable, t.fixed, false, t.options.isSampleCreate);
+      XMLSchema::Types::ElementCreateArgs args(t.tagName, t.nsUri, t.nsPrefix, t.ownerDoc, t.parentNode, prevSibl, nextSibl, t.abstract, t.nillable, t.fixed, false, t.options.isSampleCreate);
       E* node = NULL;
 
       // if element's type is specified in instance document using xsi:type
       if(t.options.xsiType.length()>0)
       {
-        DOMString instanceTypeNsUri="", instanceTypeName="";
-        vector<XPlus::UString> tokens;
-        t.options.xsiType.tokenize(':', tokens);
+        DOM::DOMString instanceTypeNsUri="", instanceTypeName="";
+        std::vector<XPlus::UString> tokens;
+        t.options.xsiType.tokenize(":", tokens);
         poco_assert(tokens.size()<=2);
         if(tokens.size() == 2) 
         {
@@ -258,7 +252,7 @@ namespace XSD
         TPtr myTypeCast = dynamic_cast<TPtr>(pOverriddenType);
         if(!myTypeCast || pOverriddenType->typeAbstract()) 
         {
-          ostringstream oss;
+          std::ostringstream oss;
           oss << "  The value of the attribute {"
               << XPlus::Namespaces::s_xsiUri 
               << "}type inside an element, in the instance document should resolve " 
@@ -285,11 +279,11 @@ namespace XSD
         }
         else 
         {
-          ostringstream ossElemNS;
+          std::ostringstream ossElemNS;
           if(t.nsUri) ossElemNS << "{" << *t.nsUri << "} "; 
           ossElemNS << *t.tagName;
 
-          ostringstream oss;
+          std::ostringstream oss;
           oss << " The element can not be nilled because it is not declared nillable in the schema";  
           XPlus::RuntimeException ex(oss.str());
           ex.setContext("element", ossElemNS.str());  
@@ -311,8 +305,8 @@ namespace XSD
   {
     if(t.ownerDoc->buildTree() || ! t.fsm->fsmCreatedNode() || t.options.isDefaultCreate)
     {
-      AttributeCreateArgs args(t.tagName, t.nsUri, NULL, t.ownerElem, t.ownerDoc, NULL, t.options.isSampleCreate);
-      AutoPtr<T> node = new T(args);
+      XMLSchema::Types::AttributeCreateArgs args(t.tagName, t.nsUri, NULL, t.ownerElem, t.ownerDoc, NULL, t.options.isSampleCreate);
+      XPlus::AutoPtr<T> node = new T(args);
       t.fsm->fsmCreatedNode(node);
       return node;
     }

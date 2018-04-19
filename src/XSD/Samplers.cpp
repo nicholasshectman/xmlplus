@@ -29,6 +29,8 @@ extern "C" {
 #include "XSD/Sampler.h"
 #include "XPlus/StringUtils.h"
 
+using namespace XPlus;
+
 namespace XMLSchema
 {
   namespace Sampler

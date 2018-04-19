@@ -29,9 +29,6 @@
 #include "XPlus/AutoPtr.h"
 #include "XPlus/XPlusObject.h"
 
-using namespace std;
-using namespace XPlus;
-
 namespace FSM
 {
 
@@ -76,7 +73,7 @@ namespace FSM
               << endl;
     }
   };
-  typedef AutoPtr<ActionEdge> ActionEdgePtr;
+  typedef XPlus::AutoPtr<ActionEdge> ActionEdgePtr;
   typedef ActionEdge* ActionEdgeP;
 
 
@@ -92,10 +89,10 @@ namespace FSM
     virtual bool processEvent(int eventId)=0; 
     virtual bool isInFinalState()const =0;
     virtual bool isInitFinalState()const =0;
-    virtual list<int> suggestNextEvents() const =0;
+    virtual std::list<int> suggestNextEvents() const =0;
     virtual void print() const =0;
   };
-  typedef AutoPtr<FSMBase> FSMBasePtr;
+  typedef XPlus::AutoPtr<FSMBase> FSMBasePtr;
   typedef FSMBase* FSMBaseP;
 
 
@@ -103,8 +100,8 @@ namespace FSM
   {
   protected:
     int                           _stateId;
-    vector<int>                   _finalStates;
-    map<int,list<ActionEdge> >    _stateTransMap;
+    std::vector<int>                   _finalStates;
+    std::map<int,std::list<ActionEdge> >    _stateTransMap;
 
     GraphFSM(const GraphFSM& gfsm):
       _stateId(gfsm.stateId()),
@@ -114,20 +111,20 @@ namespace FSM
     }
     virtual ~GraphFSM() {}
     
-    void init(vector<ActionEdge>& transitions, vector<int>& finalStates) ;
+    void init(std::vector<ActionEdge>& transitions, std::vector<int>& finalStates) ;
     ActionEdge* getTransitionForEvent(int eventId);
 
   public:
     inline int stateId() const { return _stateId; }
-    inline const vector<int>& finalStates() const { return _finalStates; }
-    inline const map<int,list<ActionEdge> >& stateTransMap() const { return _stateTransMap; }
+    inline const std::vector<int>& finalStates() const { return _finalStates; }
+    inline const std::map<int,std::list<ActionEdge> >& stateTransMap() const { return _stateTransMap; }
 
-    GraphFSM(vector<ActionEdge>& transitions, vector<int>& finalStates);
+    GraphFSM(std::vector<ActionEdge>& transitions, std::vector<int>& finalStates);
     virtual FSMBase* clone() const;
     virtual bool processEvent(int eventId); 
     virtual bool isInFinalState() const;
     virtual bool isInitFinalState() const;
-    virtual list<int> suggestNextEvents() const;
+    virtual std::list<int> suggestNextEvents() const;
     void print() const;
   };
 
@@ -153,22 +150,22 @@ namespace FSM
   {
   protected:
     // all possible events
-    vector<SEAEdge>   _eventEdges;
+    std::vector<SEAEdge>   _eventEdges;
 
     // eventId to eventReceived(bool) map
-    map<int,bool>   _eventsReceived;
+    std::map<int,bool>   _eventsReceived;
 
     bool isEventReceived(int eventId) const;
 
   public:
 
-    SEAFSM(vector<SEAEdge>& eventArray);
+    SEAFSM(std::vector<SEAEdge>& eventArray);
     virtual ~SEAFSM() {};
     virtual FSMBase* clone() const;
     virtual bool processEvent(int eventId); 
     virtual bool isInitFinalState() const;
     virtual bool isInFinalState() const;
-    virtual list<int> suggestNextEvents() const;
+    virtual std::list<int> suggestNextEvents() const;
     void print() const;
   };
 

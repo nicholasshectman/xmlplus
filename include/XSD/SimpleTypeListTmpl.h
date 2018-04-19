@@ -1,6 +1,7 @@
 // This file is part of XmlPlus package
 // 
 // Copyright (C)   2010-2013 Satya Prakash Tripathi
+// Copyright (C)   2017-2018 Akamai Technologies
 //
 //
 // This program is free software: you can redistribute it and/or modify
@@ -24,7 +25,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <list>
 
 #include "XPlus/AutoPtr.h"
 #include "XPlus/UString.h"
@@ -37,17 +37,14 @@
 #include "XSD/Facets.h"
 #include "XSD/Sampler.h"
 
-using namespace std;
-using namespace XPlus;
-
 namespace XMLSchema 
 {
 
   //fwd-declarations
   class TElement;
   class TDocument;
-  typedef AutoPtr<TElement> TElementPtr;
-  typedef AutoPtr<TDocument> TDocumentPtr;
+  typedef XPlus::AutoPtr<TElement> TElementPtr;
+  typedef XPlus::AutoPtr<TDocument> TDocumentPtr;
   typedef TElement* TElementP;
   typedef TDocument* TDocumentP;
 
@@ -65,23 +62,23 @@ namespace XMLSchema
 
           virtual ~SimpleTypeListTmpl() {}
 
-          void stringValue(DOMString val)
+          void stringValue(DOM::DOMString val)
           {
             //setValue(val);
             anySimpleType::stringValue(val);
           }
 
-          inline virtual DOMString stringValue() {
+          inline virtual DOM::DOMString stringValue() {
             return anySimpleType::stringValue();
           }
 
 #define MAX_LIST_CNT_SAMPLE 10
-          virtual DOMString sampleValue() 
+          virtual DOM::DOMString sampleValue() 
           {
             int minLen = 0, maxLen = MAX_LIST_CNT_SAMPLE;
             int cnt = Sampler::integerRandomInRange(1,MAX_LIST_CNT_SAMPLE+1);
             if(isEnumerationCFacetSet()) {
-              vector<DOMString> enumStrings = _enumerationCFacet.value();
+              std::vector<DOM::DOMString> enumStrings = _enumerationCFacet.value();
               return Sampler::getRandomSample(enumStrings);
             }
             if(isLengthCFacetSet()) {
@@ -102,7 +99,7 @@ namespace XMLSchema
             args.isSampleCreate = true; 
             T t(args);
 
-            DOMString sampleListStr;
+            DOM::DOMString sampleListStr;
             for(int i=0; i<cnt; i++)
             {
               if(i != 0) {
@@ -117,16 +114,18 @@ namespace XMLSchema
             return _listValues.size(); 
           }
 
-          list<T> listValues() {
+          std::vector<T> &listValues() {
             return _listValues;
           }
 
         protected:
         
-          virtual void setValue(DOMString val) 
+          virtual void setValue(DOM::DOMString val) 
           {
-            vector<XPlus::UString> tokens;
-            val.tokenize(' ', tokens);
+            std::vector<XPlus::UString> tokens;
+            // Be careful!  Adding a comma to the set of token separators here
+            // would make this code not compliant with the XSD spec!
+            val.tokenize(" ", tokens);
             for(unsigned int i=0; i<tokens.size(); i++)
             {
               AnyTypeCreateArgs args;
@@ -139,7 +138,7 @@ namespace XMLSchema
             _value = val;
           }
 
-          list<T>         _listValues;
+          std::vector<T>         _listValues;
       };
 
   } // end namespace Types 

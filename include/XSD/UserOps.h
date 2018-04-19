@@ -77,7 +77,7 @@ namespace XSD
         string outFile = "sample.xml";
         try 
         {
-          AutoPtr<T> xsdDoc = createXsdDocument(true, true);
+          XPlus::AutoPtr<T> xsdDoc = createXsdDocument(true, true);
           xsdDoc->prettyPrint(nopretty!=1);
           doc2xml(xsdDoc, outFile);
         }
@@ -97,7 +97,7 @@ namespace XSD
         string outFile="t.xml";
         try 
         {
-          AutoPtr<T> xsdDoc = createXsdDocument(true);
+          XPlus::AutoPtr<T> xsdDoc = createXsdDocument(true);
           xsdDoc->prettyPrint(nopretty!=1);
           if(_cbStruct.cbPopulateDocument) {
             _cbStruct.cbPopulateDocument(xsdDoc);
@@ -124,7 +124,7 @@ namespace XSD
         string outFile = inFilePath+ ".row.xml";
         try 
         {
-          AutoPtr<T> xsdDoc = createXsdDocumentFromFile(inFilePath);
+          XPlus::AutoPtr<T> xsdDoc = createXsdDocumentFromFile(inFilePath);
           xsdDoc->prettyPrint(nopretty!=1);
           if(_cbStruct.cbUpdateOrConsumeDocument) {
             _cbStruct.cbUpdateOrConsumeDocument(xsdDoc);
@@ -242,7 +242,7 @@ namespace XSD
         cout << "Going to roundtrip file:" << inFilePath << endl;
         try 
         {
-          AutoPtr<T> xsdDoc = createXsdDocumentFromFile(inFilePath);
+          XPlus::AutoPtr<T> xsdDoc = createXsdDocumentFromFile(inFilePath);
           xsdDoc->prettyPrint(true);
           string outFile = inFilePath + ".rt.xml";
           doc2xml(xsdDoc, outFile);
@@ -262,7 +262,7 @@ namespace XSD
         // be reported in the catch block
         try
         {
-          AutoPtr<T> xsdDoc = createXsdDocumentFromFile(inFilePath);
+          XPlus::AutoPtr<T> xsdDoc = createXsdDocumentFromFile(inFilePath);
         }
         catch(XPlus::Exception& ex)
         {

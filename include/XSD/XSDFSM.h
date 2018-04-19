@@ -41,21 +41,17 @@
 #define EVT_TYPE_ENDOFELEMENT    "end-of-Element"
 #define EVT_TYPE_ENDOFDOCUMENT   "end-of-Document"
 
-
-using namespace std;
-using namespace XPlus;
 using XPlus::Namespaces;
-
 
 namespace FSM {
 
   class XsdFsmBase;
-  typedef AutoPtr<XsdFsmBase> XsdFsmBasePtr;
+  typedef XPlus::AutoPtr<XsdFsmBase> XsdFsmBasePtr;
   typedef XsdFsmBase* XsdFsmBaseP;
 
 void warnNullNode(void *pNode, const char* nodeName, const char* qName, int minOccurence);
-bool matchNamespace(const DOMString* nsUri1, const DOMString* nsUri2);
-void outputErrorToException(XPlus::Exception& ex, list<DOMString> possibleEvents, DOMString gotEvent, bool docBuilding=true);
+bool matchNamespace(const DOM::DOMString* nsUri1, const DOM::DOMString* nsUri2);
+void outputErrorToException(XPlus::Exception& ex, std::list<DOM::DOMString> possibleEvents, DOM::DOMString gotEvent, bool docBuilding=true);
 
 struct Particle
 {
@@ -98,7 +94,7 @@ struct FsmCbOptions
   bool isDefaultCreate;
   bool isSampleCreate;
   
-  FsmCbOptions(DOMString xsiType="", DOMString xsiNil="", DOMString xsiSchemaLocation="", DOMString xsiNoNamespaceSchemaLocation=""):
+  FsmCbOptions(DOMString /* xsiType */ ="", DOMString /* xsiNil */ ="", DOMString /* xsiSchemaLocation */ ="", DOMString /* xsiNoNamespaceSchemaLocation */ =""):
     xsiType(""),
     xsiNil(""),
     xsiSchemaLocation(""),
@@ -106,10 +102,6 @@ struct FsmCbOptions
     isDefaultCreate(false),
     isSampleCreate(false)
     {
-      USED(xsiType);
-      USED(xsiNil);
-      USED(xsiSchemaLocation);
-      USED(xsiNoNamespaceSchemaLocation);
     }
 
     void printDebug() {
@@ -232,7 +224,7 @@ class XsdFsmBase : public virtual XPlus::XPlusObject
     virtual Node* nextSiblingElementInSchemaOrder(XsdFsmBase* callerFsm) =0;
     virtual bool isInFinalState() const =0;
     virtual bool isInitFinalState() const=0;
-    virtual list<DOMString> suggestNextEvents() const=0; 
+    virtual std::list<DOM::DOMString> suggestNextEvents() const=0; 
     virtual XsdFsmBasePtr currentUnitFsm()=0;
     
     virtual void fireRequiredEvents(bool docBuilding=true)=0;
@@ -263,7 +255,7 @@ class XsdFsmBase : public virtual XPlus::XPlusObject
 
 
 
-DOMString formatNamespaceName(XsdEvent::XsdFsmType fsmType, DOMString* nsUri, DOMString localName);
+DOM::DOMString formatNamespaceName(XsdEvent::XsdFsmType fsmType, DOM::DOMString* nsUri, DOM::DOMString localName);
 
 // Another meaningful name for this class is UnitFsm (TODO: rename it later)
 template<class ReturnType>
@@ -271,8 +263,8 @@ class XsdFSM : public XsdFsmBase
 {
   public:
 
-    typedef AutoPtr<noargs_function_base<ReturnType> > noargs_function_base_ptr;
-    typedef AutoPtr<unary_function_base<ReturnType, FsmCbOptions> > unary_function_base_ptr;
+    typedef XPlus::AutoPtr<XPlus::noargs_function_base<ReturnType> > noargs_function_base_ptr;
+    typedef XPlus::AutoPtr<XPlus::unary_function_base<ReturnType, FsmCbOptions> > unary_function_base_ptr;
 
     XsdFSM(Particle pair, 
         XsdEvent::XsdFsmType fsmType, 
@@ -289,7 +281,6 @@ class XsdFSM : public XsdFsmBase
 
     // copy constructor
     XsdFSM(const XsdFSM& xsdFsm):
-      XPlusObject(),
       //_nsName(xsdFsm.nsName()),
       _eventIds(xsdFsm.eventIds()),
       _eventNames(xsdFsm.eventNames()),
@@ -328,8 +319,8 @@ class XsdFSM : public XsdFsmBase
         case  XsdEvent::ELEMENT_END:
         case  XsdEvent::DOCUMENT_END:
           {
-            vector<FSM::ActionEdge> transitions;
-            vector<int> finalStates;
+            std::vector<FSM::ActionEdge> transitions;
+            std::vector<int> finalStates;
             finalStates.push_back(FSM::FSM_INIT_STATE);
 
             int stateId = FSM::FSM_INIT_STATE;
@@ -417,9 +408,8 @@ class XsdFSM : public XsdFsmBase
     // if XsdFSM(ie array of same element) has some element 
     // then return the rightmostElement 
     // else refer to parentFsm for previous sibling element
-    virtual Node* previousSiblingElementInSchemaOrder(XsdFsmBase *callerFsm)
+    virtual Node* previousSiblingElementInSchemaOrder(XsdFsmBase * /*callerFsm*/)
     {
-      USED(*callerFsm);
       Node *node = this->rightmostElement();
       if(node) {
         return node;
@@ -431,9 +421,8 @@ class XsdFSM : public XsdFsmBase
       return NULL;
     }
 
-    virtual Node* nextSiblingElementInSchemaOrder(XsdFsmBase *callerFsm)
+    virtual Node* nextSiblingElementInSchemaOrder(XsdFsmBase * /*callerFsm*/)
     {
-      USED(*callerFsm);
       //revisit:
       // if the node is being added at some index in elem[] array then
       // will need to find nexts-sibling here
@@ -564,8 +553,8 @@ class XsdFSM : public XsdFsmBase
       if(!consumed)
       {
         XMLSchema::FSMException ex("");
-        list<DOMString> allowedEvents = this->suggestNextEvents();
-        DOMString gotEvent = formatNamespaceName(event.fsmType, event.nsUri, event.localName);
+        std::list<DOM::DOMString> allowedEvents = this->suggestNextEvents();
+        DOM::DOMString gotEvent = formatNamespaceName(event.fsmType, event.nsUri, event.localName);
         outputErrorToException(ex, allowedEvents, gotEvent, event.docBuilding);
         throw ex;
       }
@@ -587,9 +576,9 @@ class XsdFSM : public XsdFsmBase
       return false;
     }
 
-    virtual list<DOMString> suggestNextEvents() const 
+    virtual std::list<DOM::DOMString> suggestNextEvents() const 
     {
-      list<DOMString> possibleNSNameEvents;
+      std::list<DOM::DOMString> possibleNSNameEvents;
 
       // xsi namespace attributes do not have to be suggested
       if( nsName().nsUri && 
@@ -603,11 +592,11 @@ class XsdFSM : public XsdFsmBase
       if(!_fsm) {
         return possibleNSNameEvents;
       }
-      list<int> allowedEvents = _fsm->suggestNextEvents();
-      list<int>::const_iterator cit = allowedEvents.begin();
+      std::list<int> allowedEvents = _fsm->suggestNextEvents();
+      std::list<int>::const_iterator cit = allowedEvents.begin();
       for( ; cit!=allowedEvents.end(); cit++) 
       {
-        DOMString evtName = _eventNames[*cit];
+        DOM::DOMString evtName = _eventNames[*cit];
         possibleNSNameEvents.push_back(evtName);
       }
       return possibleNSNameEvents;
@@ -617,10 +606,10 @@ class XsdFSM : public XsdFsmBase
       return new XsdFSM(*this);
     }
   
-    inline const vector<int>& eventIds() const {
+    inline const std::vector<int>& eventIds() const {
       return _eventIds;
     }
-    inline const vector<DOMString>& eventNames() const {
+    inline const std::vector<DOM::DOMString>& eventNames() const {
       return _eventNames;
     }
     inline const unary_function_base_ptr cbFunctor() const {
@@ -635,7 +624,7 @@ class XsdFSM : public XsdFsmBase
       return _fsm;
     }
 
-    inline List<ReturnType>& nodeList() {
+    inline XPlus::List<ReturnType>& nodeList() {
       return _nodeList;
     }
 
@@ -646,16 +635,16 @@ class XsdFSM : public XsdFsmBase
   protected:
        //int                      _eventId;
        //DOMString                _eventName;
-    vector<int>              _eventIds;
-    vector<DOMString>        _eventNames;
+    std::vector<int>              _eventIds;
+    std::vector<DOM::DOMString>        _eventNames;
     unary_function_base_ptr  _cbFunctor;
     XsdEvent::XsdFsmType     _fsmType;
     FSM::FSMBasePtr          _fsm;
 
-    List<ReturnType>         _nodeList;
+    XPlus::List<ReturnType>         _nodeList;
 };
 
-//typedef AutoPtr<XsdFSM> XsdFSMPtr;
+//typedef XPlus::AutoPtr<XsdFSM> XsdFSMPtr;
 
 
 
@@ -684,7 +673,7 @@ class XsdFsmOfFSMs : public XsdFsmBase
   virtual bool processEvent(XsdEvent& event); 
   
   virtual bool isInFinalState() const;
-  virtual list<DOMString> suggestNextEvents() const; 
+  virtual std::list<DOM::DOMString> suggestNextEvents() const; 
   virtual XsdFsmBasePtr currentUnitFsm();
   virtual void fireRequiredEvents(bool docBuilding=true);
   virtual void fireSampleEvents(bool docBuilding=true);
@@ -695,7 +684,7 @@ class XsdFsmOfFSMs : public XsdFsmBase
   virtual Node* previousSiblingElementInSchemaOrder(XsdFsmBase *callerFsm);
   virtual Node* nextSiblingElementInSchemaOrder(XsdFsmBase *callerFsm);
 
-  void appendUniqueUnitFsms(const vector<XsdFsmBasePtr>& fsmVec);
+  void appendUniqueUnitFsms(const std::vector<XsdFsmBasePtr>& fsmVec);
   void replaceOrAppendUniqueUnitFsms(XsdFsmBasePtr* fsms);
   void appendFsms(XsdFsmBasePtr* fsms);
   void replaceFsmAt(XsdFsmBase* fsm, unsigned int idx);
@@ -712,7 +701,7 @@ class XsdFsmOfFSMs : public XsdFsmBase
     return _fsmType;
   }
   
-  const vector<XsdFsmBasePtr>& allFSMs() const {
+  const std::vector<XsdFsmBasePtr>& allFSMs() const {
     return _allFSMs;
   }
     
@@ -720,11 +709,11 @@ class XsdFsmOfFSMs : public XsdFsmBase
     return _allFSMs[idx].get(); 
   }
   
-  vector<XsdFsmBasePtr>& allFSMs() {
+  std::vector<XsdFsmBasePtr>& allFSMs() {
     return _allFSMs;
   }
 
-  const map<int,bool>&  indicesDirtyFsms() const {
+  const std::map<int,bool>&  indicesDirtyFsms() const {
     return _indicesDirtyFsms;
   }
 
@@ -740,7 +729,7 @@ class XsdFsmOfFSMs : public XsdFsmBase
 
   protected:
   int                     _currentFSMIdx;
-  vector<XsdFsmBasePtr>   _allFSMs;
+  std::vector<XsdFsmBasePtr>   _allFSMs;
   FSMType                 _fsmType;
   
   // used for case ALL, contains:
@@ -749,7 +738,7 @@ class XsdFsmOfFSMs : public XsdFsmBase
   //        +
   // 2) index of the FSM(if any), which is currently consuming events 
   //    but may not be in final state
-  map<int,bool>           _indicesDirtyFsms;
+  std::map<int,bool>           _indicesDirtyFsms;
 
   bool processEventChoice(XsdEvent& event);
   bool processEventSequence(XsdEvent& event);
@@ -761,14 +750,14 @@ class XsdFsmOfFSMs : public XsdFsmBase
   bool isInFinalStateSequence() const;
   bool isInFinalStateAll() const;
 
-  list<DOMString> suggestNextEventsChoice() const;
-  list<DOMString> suggestNextEventsSequence() const;
-  list<DOMString> suggestNextEventsAll() const;
+  std::list<DOM::DOMString> suggestNextEventsChoice() const;
+  std::list<DOM::DOMString> suggestNextEventsSequence() const;
+  std::list<DOM::DOMString> suggestNextEventsAll() const;
   
   bool isFsmDirty(int fsmIndex) const;
 };
 
-typedef AutoPtr<XsdFsmOfFSMs> XsdFsmOfFSMsPtr;
+typedef XPlus::AutoPtr<XsdFsmOfFSMs> XsdFsmOfFSMsPtr;
 
 
 struct XsdSequenceFsmOfFSMs : public XsdFsmOfFSMs
@@ -792,7 +781,7 @@ struct XsdSequenceFsmOfFSMs : public XsdFsmOfFSMs
     XsdFsmOfFSMs::init(fsms, XsdFsmOfFSMs::SEQUENCE);
   }
 };
-typedef AutoPtr<XsdSequenceFsmOfFSMs> XsdSequenceFsmOfFSMsPtr;
+typedef XPlus::AutoPtr<XsdSequenceFsmOfFSMs> XsdSequenceFsmOfFSMsPtr;
 
 
 struct XsdChoiceFsmOfFSMs : public XsdFsmOfFSMs
@@ -814,7 +803,7 @@ struct XsdChoiceFsmOfFSMs : public XsdFsmOfFSMs
     XsdFsmOfFSMs::init(fsms, XsdFsmOfFSMs::CHOICE);
   }
 };
-typedef AutoPtr<XsdChoiceFsmOfFSMs> XsdChoiceFsmOfFSMsPtr;
+typedef XPlus::AutoPtr<XsdChoiceFsmOfFSMs> XsdChoiceFsmOfFSMsPtr;
 
 
 struct XsdAllFsmOfFSMs : public XsdFsmOfFSMs
@@ -834,7 +823,7 @@ struct XsdAllFsmOfFSMs : public XsdFsmOfFSMs
     XsdFsmOfFSMs::init(fsms, XsdFsmOfFSMs::ALL);
   }
 };
-typedef AutoPtr<XsdAllFsmOfFSMs> XsdAllFsmOfFSMsPtr;
+typedef XPlus::AutoPtr<XsdAllFsmOfFSMs> XsdAllFsmOfFSMsPtr;
 
 
 struct XsdGroupFsmOfFSMs : public XsdFsmOfFSMs
@@ -854,7 +843,7 @@ struct XsdGroupFsmOfFSMs : public XsdFsmOfFSMs
     XsdFsmOfFSMs::init(fsms, XsdFsmOfFSMs::GROUP);
   }
 };
-typedef AutoPtr<XsdGroupFsmOfFSMs> XsdGroupFsmOfFSMsPtr;
+typedef XPlus::AutoPtr<XsdGroupFsmOfFSMs> XsdGroupFsmOfFSMsPtr;
 
 
 struct AnyTypeFSM : public XsdSequenceFsmOfFSMs
@@ -880,7 +869,7 @@ struct AnyTypeFSM : public XsdSequenceFsmOfFSMs
   void replaceContentFsm(XsdFsmBase* contentFsm);
 
 };
-typedef AutoPtr<AnyTypeFSM> AnyTypeFSMPtr;
+typedef XPlus::AutoPtr<AnyTypeFSM> AnyTypeFSMPtr;
 
 
 
@@ -928,10 +917,10 @@ struct FsmTreeNode : public XPlus::TreeNode<XsdFsmBasePtr>
 
   bool processEvent(XsdEvent& event);
 };
-typedef AutoPtr<FsmTreeNode> FsmTreeNodePtr;
+typedef XPlus::AutoPtr<FsmTreeNode> FsmTreeNodePtr;
 
     
-struct BinaryFsmTree : public BinaryTree<XsdFsmBasePtr>
+struct BinaryFsmTree : public XPlus::BinaryTree<XsdFsmBasePtr>
 {
   unsigned int               _minDepth;
   unsigned int               _maxDepth;
@@ -1024,7 +1013,7 @@ class XsdFsmArray : public XsdFsmBase
     virtual bool processEventThrow(XsdEvent& event); 
     virtual bool isInFinalState() const;
     virtual bool isInitFinalState() const;
-    virtual list<DOMString> suggestNextEvents() const; 
+    virtual std::list<DOM::DOMString> suggestNextEvents() const; 
     virtual XsdFsmBasePtr currentUnitFsm();
     virtual void fireRequiredEvents(bool docBuilding=true);
     virtual void fireSampleEvents(bool docBuilding=true);
@@ -1042,7 +1031,7 @@ class XsdFsmArray : public XsdFsmBase
     virtual Node* nextSiblingElementInSchemaOrder(XsdFsmBase *callerFsm);
     inline const XsdFsmBasePtr& unitFsm() const { return _unitFsm; }
     inline const BinaryFsmTree& fsmTree() const { return _fsmTree; }
-    //inline const list<XsdFsmBasePtr>& fsmList() const { return _fsmList; }
+    //inline const std::list<XsdFsmBasePtr>& fsmList() const { return _fsmList; }
     inline unsigned int minOccurence() const { return _minOccurence; }
     inline unsigned int maxOccurence() const { return _maxOccurence; }
 
@@ -1055,7 +1044,7 @@ class XsdFsmArray : public XsdFsmBase
 
     // list of unitFsm to hold the finally accomodated states
     // This list should hold a maximum of 'maxOccurence' number of unitFsm
-    list<XsdFsmBasePtr>        _fsmList;
+    std::list<XsdFsmBasePtr>        _fsmList;
 
     unsigned int _minOccurence;
     unsigned int _maxOccurence;
