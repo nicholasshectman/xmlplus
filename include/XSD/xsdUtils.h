@@ -219,7 +219,7 @@ namespace XMLSchema
       }
     }
 
-    TElement() {printf("TElement::TElement()\n");}
+    TElement() { }
 
     virtual ~TElement() {}
 
@@ -261,12 +261,9 @@ namespace XMLSchema
                               Types::BOF_NONE, Types::BOF_NONE, Types::CONTENT_TYPE_VARIETY_MIXED, 
                               Types::ANY_TYPE, args.suppressTypeAbstract, args.isSampleCreate)
            )
-    {
-      printf("XMLSchema::XmlElement::XmlElement(XMLSchema::Types::ElementCreateArgs\n");
-      cout << args.name->str() << endl;
-    }
+    { }
 
-      XmlElement() {printf("XmlElement::XmlElement()\n");}
+      XmlElement() { }
 
       virtual ~XmlElement() {}
         

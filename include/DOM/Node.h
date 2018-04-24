@@ -213,7 +213,7 @@ public:
       Node* nextSibling=NULL
   );
 
-  Node() {cout << "DOM::Node::Node()\n";}
+  Node() { }
   virtual ~Node();
 
   virtual inline const DOMString* getNodeName() const {

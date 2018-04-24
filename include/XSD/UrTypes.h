@@ -211,7 +211,7 @@ namespace XMLSchema
       public:
 
         anyType(AnyTypeCreateArgs args, eAnyTypeUseCase anyTypeUseCase_ = ANY_TYPE);
-        anyType() {printf("anyType::anyType()\n");}
+        anyType() { }
 
         virtual ~anyType() {}
 
