@@ -488,7 +488,7 @@ ModelGroupDefinition + ModelGroup :   (group | all | choice | sequence)?
   maxOccurs = 1 : 1
   minOccurs = (0 | 1) : 1
   {any attributes with non-schema namespace . . .}>
-  Content: (annotation?, element*)
+  Content: (annotation?, element*, any?)
 </all>
 -->
 <xsl:template name="ON_COMPLEXTYPE_MG_ALL">
@@ -520,9 +520,12 @@ ModelGroupDefinition + ModelGroup :   (group | all | choice | sequence)?
           <xsl:with-param name="schemaComponentName" select="$schemaComponentName"/>
         </xsl:call-template>  
       </xsl:when>  
+      <xsl:when test="$localName='any'">
+        <xsl:call-template name="ON_COMPLEXTYPE_ANY_H"/>
+      </xsl:when>  
       <xsl:otherwise>  
         <xsl:call-template name="T_terminate_with_msg"><xsl:with-param name="msg">
-        Error: expected (annotation?, element*), got <xsl:value-of select="$localName"/> 
+        Error: expected (annotation?, element*, any?), got <xsl:value-of select="$localName"/> 
         </xsl:with-param></xsl:call-template>
       </xsl:otherwise>  
     </xsl:choose>
@@ -822,7 +825,6 @@ namespace Types
   </xsl:for-each>    
     _fsmAttrs = _fsm->attributeFsm();
     _fsmElems = _fsm->contentFsm();
-
   }
 
   /* element functions  */
