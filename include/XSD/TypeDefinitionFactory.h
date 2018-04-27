@@ -121,34 +121,6 @@ namespace XSD
     //return pT;
     return pAny;
   }
-    
-  struct MapWrapper
-  {
-    typedef std::map<std::string, XMLSchema::Types::anyType*(*)(XMLSchema::Types::ElementCreateArgs args)> map_type;
-   
-    MapWrapper():
-     _pQNameToTypeMap(NULL)
-    {}
-
-    ~MapWrapper()
-    {
-      delete _pQNameToTypeMap;
-    }
-    
-    map_type * getMap() 
-    {
-      // FIXME: make thread safe
-      if(!_pQNameToTypeMap) {
-        _pQNameToTypeMap = new map_type; 
-      } 
-      return _pQNameToTypeMap; 
-    }
-
-    protected: 
-    map_type*  _pQNameToTypeMap;
-    
-  };
-
 
   struct TypeDefinitionFactory 
   {
@@ -173,10 +145,10 @@ namespace XSD
 
     protected:
 
-    // use heap as the construction order is unknown(global order fiasco)
     static map_type* getMap() 
     {
-      return _map.getMap(); 
+      static map_type pQNameToTypeMap;
+      return &pQNameToTypeMap;
     }
 
     static const std::string createKeyForQNameToTypeMap(const std::string& typeName, const std::string& typeNsUri)
@@ -196,9 +168,6 @@ namespace XSD
 
     std::string            _name;
     std::string            _nsUri;
-
-    private:
-    static MapWrapper  _map;
   };
 
   // create a templatized derivation of TypeDefinitionFactory

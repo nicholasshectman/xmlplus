@@ -36,8 +36,6 @@ using namespace FSM;
 using namespace XPlus;
 using XPlus::Namespaces;
 
-XSD::MapWrapper  XSD::TypeDefinitionFactory::_map;
-
 namespace XMLSchema
 {
 
@@ -358,38 +356,31 @@ namespace XMLSchema
 
     // creates or resizes the _textNodes to make it's size exactly one.
     // TextNode(created or existing) would have the supplied value 
-    TextNode* anyType::createTextNodeOnSetValue(DOMString value)
-    {
+    TextNode* anyType::createTextNodeOnSetValue(DOMString value) {
       TextNode* valueNode = NULL;
-      DOMStringPtr valuePtr = new DOMString(value);
-      if(_textNodes.size() == 0) 
-      {
+      if(_textNodes.size() == 0) {
         if(this->ownerNode()) {
+          DOMStringPtr valuePtr = new DOMString(value); // XXX
           valueNode = this->ownerNode()->createChildTextNode(valuePtr);
-        }
-        else {
+        } else {
           // this textNode would not get added to DOM ... heppens in following cases:
           // - SimpleTypeListTmpl::stringValue -- harmless here
           // - ...
+          DOMStringPtr valuePtr = new DOMString(value); // XXX
           valueNode = new TextNode(valuePtr, this->ownerDocument(), NULL);
         }
         _textNodes.push_back(valueNode);
-      }
-      else if(_textNodes.size() == 1) 
-      {
+      } else if(_textNodes.size() == 1) {
         valueNode = _textNodes.at(0);
+        DOMStringPtr valuePtr = new DOMString(value); // XXX
         valueNode->setNodeValue(valuePtr);
-      }
-      else // _textNodes.size() > 1
-      {
+      } else { // _textNodes.size() > 1
         // TODO: should this new node be added to end of DOM children ??
         // delete the textNodes beyond 1st from node's children(DOM), and set 
         // the value in the 1st node
 
-        if(this->ownerNode())
-        {
-          for(unsigned int i=1; i<_textNodes.size(); i++)
-          {
+        if(this->ownerNode()) {
+          for(unsigned int i=1; i<_textNodes.size(); i++) {
             this->ownerNode()->removeChild(_textNodes.at(i));
           }
         }
@@ -397,6 +388,7 @@ namespace XMLSchema
         _textNodes.erase(++it, _textNodes.end());
 
         valueNode = _textNodes.at(0);
+        DOMStringPtr valuePtr = new DOMString(value); // XXX
         valueNode->setNodeValue(valuePtr);
       }
 
