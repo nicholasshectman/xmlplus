@@ -45,8 +45,7 @@ targetNamespace="http://www.w3.org/2001/XMLSchema"
 <xsl:call-template name="GEN_INCLUDELIST_OF_COMPLEXTYPE_SIMPLETYPE_INCLUDE_H"/>
 
 <xsl:call-template name="T_emit_cppNSBegin_for_nsUri"><xsl:with-param name="nsUri" select="$targetNsUri"/></xsl:call-template>
-namespace Types 
-{
+namespace Types {
   <xsl:choose>
     <xsl:when test="*[local-name()='sequence' or local-name()='choice' or local-name()='all' or local-name()='group']">
       <xsl:call-template name="DEFINE_LEVEL1_COMPLEXTYPE_MG_MGD_H">
@@ -81,7 +80,7 @@ namespace Types
 /// \n Refer to documentation on structures/methods inside ...
 class <xsl:value-of select="$cppName"/> : public XMLSchema::Types::anyType
 {
-  public:
+ public:
   //constructor
   <xsl:value-of select="$cppName"/>(XMLSchema::Types::AnyTypeCreateArgs args);
 
@@ -89,7 +88,7 @@ class <xsl:value-of select="$cppName"/> : public XMLSchema::Types::anyType
     <xsl:with-param name="schemaComponentName" select="$schemaComponentName"/>
   </xsl:call-template>  
 
-  private:
+ private:
   static XSD::TypeDefinitionFactoryTmpl&lt;XMLSchema::XmlElement&lt;<xsl:value-of select="$cppName"/>&gt; &gt;   s_typeRegistry;
 }; //end class <xsl:value-of select="$cppName"/>
 </xsl:template>
@@ -243,7 +242,7 @@ class <xsl:value-of select="$cppName"/> : public XMLSchema::Types::anyType
 /// \n Refer to documentation on structures/methods inside ...
 class <xsl:value-of select="$cppName"/> : public <xsl:value-of select="$baseCppTypeWithNSDeref"/>
 {
-  public:
+ public:
   //constructor
   <xsl:value-of select="$cppName"/>(XMLSchema::Types::AnyTypeCreateArgs args);
 
@@ -251,7 +250,7 @@ class <xsl:value-of select="$cppName"/> : public <xsl:value-of select="$baseCppT
     <xsl:with-param name="schemaComponentName" select="$schemaComponentName"/>
   </xsl:call-template>
 
-  private:
+ private:
   static XSD::TypeDefinitionFactoryTmpl&lt;XMLSchema::XmlElement&lt;<xsl:value-of select="$cppName"/>&gt; &gt;   s_typeRegistry;
 }; //end class <xsl:value-of select="$cppName"/>
 
@@ -292,8 +291,7 @@ class <xsl:value-of select="$cppName"/> : public <xsl:value-of select="$baseCppT
 /// \n Refer to documentation on structures/methods inside ...
 class <xsl:value-of select="$cppName"/> : public <xsl:value-of select="$cppNSDeref"/>::<xsl:value-of select="$baseCppType"/> 
 {
-
-  public:
+ public:
   //constructor
   <xsl:value-of select="$cppName"/>(XMLSchema::Types::AnyTypeCreateArgs args);
 
@@ -301,7 +299,7 @@ class <xsl:value-of select="$cppName"/> : public <xsl:value-of select="$cppNSDer
     <xsl:with-param name="schemaComponentName" select="$schemaComponentName"/>
   </xsl:call-template>
   
-  private:
+ private:
   static XSD::TypeDefinitionFactoryTmpl&lt;XMLSchema::XmlElement&lt;<xsl:value-of select="$cppName"/>&gt; &gt;   s_typeRegistry;
 
 }; //end class <xsl:value-of select="$cppName"/>
@@ -333,7 +331,7 @@ class <xsl:value-of select="$cppName"/> : public <xsl:value-of select="$cppNSDer
 /// \n Refer to documentation on structures/methods inside ...
 class <xsl:value-of select="$cppName"/> : public <xsl:value-of select="$cppNSDeref"/>::<xsl:value-of select="$baseCppType"/> 
 {
-  public:
+ public:
   //constructor
   <xsl:value-of select="$cppName"/>(XMLSchema::Types::AnyTypeCreateArgs args);
 
@@ -341,7 +339,7 @@ class <xsl:value-of select="$cppName"/> : public <xsl:value-of select="$cppNSDer
     <xsl:with-param name="schemaComponentName" select="$schemaComponentName"/>
   </xsl:call-template>  
 
-  private:
+ private:
   static XSD::TypeDefinitionFactoryTmpl&lt;XMLSchema::XmlElement&lt;<xsl:value-of select="$cppName"/>&gt; &gt;   s_typeRegistry;
 }; //end class <xsl:value-of select="$cppName"/>
 </xsl:template>
@@ -516,8 +514,7 @@ XML Representation Summary: complexType Element Information Item
 
   <!-- MG/MGD access functions:END -->
 
-  protected:
-  
+ protected:
   FSM::XsdAllFsmOfFSMsPtr   _fsmAttrs;   
   FSM::XsdFsmBasePtr        _fsmElems;   
   
@@ -814,8 +811,7 @@ XML Representation Summary: complexType Element Information Item
     </xsl:if>
     </xsl:for-each>
 
-  private:  
-
+   private:  
     inline FSM::XsdFsmBase* clone() const {
       return new <xsl:value-of select="$mgNameSingularCpp"/>(*this);
     }
