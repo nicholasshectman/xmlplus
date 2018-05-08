@@ -1,6 +1,7 @@
 // This file is part of XmlPlus package
 // 
 // Copyright (C)   2010-2013 Satya Prakash Tripathi
+// Copyright (C)   2018 Akamai Technologies, Inc
 //
 //
 // This program is free software: you can redistribute it and/or modify
@@ -22,15 +23,13 @@
 
 #include <iostream>
 #include <sstream>
+#include <vector>
 
-using namespace std;
-//#define _SHAREDPTR_OBJ_DBG 1
-
-namespace XPlus 
-{
+namespace XPlus {
+  class UString;
 
 struct XPlusObject {
-  string _objName;
+  std::string _objName;
   int _refCnt;
   bool _dontFree;
 
@@ -43,42 +42,38 @@ struct XPlusObject {
   }
 
   inline void printRefCnt() {
-    cout << "@@@@@@@@@@ ptr= " << this  << " name:" <<  _objName << " cnt=" << _refCnt << " : printRefCnt" << endl;
+    std::cout << "@@@@@@@@@@ ptr= " << this  << " name:" <<  _objName << " cnt=" << _refCnt << " : printRefCnt" << std::endl;
   }
 
   inline virtual void duplicate() {
     ++_refCnt;
-#ifdef _SHAREDPTR_OBJ_DBG
-    cout << "@@@@@@@@@@ ptr= " << this  << " name:" <<  _objName << " cnt=" << _refCnt << " : duplicate" << endl;
-#endif
   }
 
   inline virtual void release() {
     --_refCnt;
-#ifdef _SHAREDPTR_OBJ_DBG
-    cout << "   @@@@@@@@@@ ptr= " << this << " name:" <<  _objName << " cnt=" << _refCnt << " : release ";
-    if(_refCnt==0) cout << ":     ***           DELETE ";
-    cout << endl;
-#endif
     if( (_refCnt==0) && !_dontFree) {
-      //cout << "       @@@@ delete called..." << endl;
       delete this;
     }
   }
 
-  XPlusObject(string name=""):
+  XPlusObject(std::string name=""):
     _objName(name),
     _refCnt(0),
     _dontFree(false)
   {
-#ifdef _SHAREDPTR_OBJ_DBG
-    cout << "@@@@@@@@@@ ptr= " << this  << " name:" <<  _objName << " cnt=" << _refCnt << " : XPlusObject::constr" << endl;
-#endif
-    ostringstream oss;
+    std::ostringstream oss;
     oss << this;
   }
 
-  virtual ~XPlusObject() {};
+  virtual ~XPlusObject();
+
+  // take responsibility for deleting a UString since those aren't really refcounted
+  UString* adopt(const UString &str);
+  void adopt(UString *ptr) { _adoptedStrings.push_back(ptr); }
+ private:
+  // keep pointers to the strings instead of strings directly
+  // so that they won't be relocated and consumers can store pointers and refs
+  std::vector<UString *> _adoptedStrings;
 };
 
 } // end namespace XPlus

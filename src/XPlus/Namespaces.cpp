@@ -31,12 +31,12 @@ namespace XPlus
   DOMString     Namespaces::s_xmlBaseStr                         = "base";
   DOMString     Namespaces::s_xmlIdStr                           = "id";
 
-  DOMStringPtr  Namespaces::s_xmlStrPtr                          = new DOMString(s_xmlStr); 
-  DOMStringPtr  Namespaces::s_xmlUriPtr                          = new DOMString(s_xmlUri);
-  DOMStringPtr  Namespaces::s_xmlLangStrPtr                      = new DOMString(s_xmlLangStr); 
-  DOMStringPtr  Namespaces::s_xmlSpaceStrPtr                     = new DOMString(s_xmlSpaceStr); 
-  DOMStringPtr  Namespaces::s_xmlBaseStrPtr                      = new DOMString(s_xmlBaseStr); 
-  DOMStringPtr  Namespaces::s_xmlIdStrPtr                        = new DOMString(s_xmlIdStr); 
+  DOMStringPtr  Namespaces::s_xmlStrPtr                          = &s_xmlStr; 
+  DOMStringPtr  Namespaces::s_xmlUriPtr                          = &s_xmlUri;
+  DOMStringPtr  Namespaces::s_xmlLangStrPtr                      = &s_xmlLangStr; 
+  DOMStringPtr  Namespaces::s_xmlSpaceStrPtr                     = &s_xmlSpaceStr; 
+  DOMStringPtr  Namespaces::s_xmlBaseStrPtr                      = &s_xmlBaseStr; 
+  DOMStringPtr  Namespaces::s_xmlIdStrPtr                        = &s_xmlIdStr; 
 
 
   // namespace and attributes with 'xsi' prefix
@@ -47,12 +47,12 @@ namespace XPlus
   DOMString     Namespaces::s_xsiSchemaLocationStr               = "schemaLocation";
   DOMString     Namespaces::s_xsiNoNamespaceSchemaLocationStr    = "noNamespaceSchemaLocation";
 
-  DOMStringPtr  Namespaces::s_xsiStrPtr                          = new DOMString(s_xsiStr); 
-  DOMStringPtr  Namespaces::s_xsiUriPtr                          = new DOMString(s_xsiUri);
-  DOMStringPtr  Namespaces::s_xsiTypeStrPtr                      = new DOMString(s_xsiTypeStr); 
-  DOMStringPtr  Namespaces::s_xsiNilStrPtr                       = new DOMString(s_xsiNilStr);
-  DOMStringPtr  Namespaces::s_xsiSchemaLocationStrPtr            = new DOMString(s_xsiSchemaLocationStr);
-  DOMStringPtr  Namespaces::s_xsiNoNamespaceSchemaLocationStrPtr = new DOMString(s_xsiNoNamespaceSchemaLocationStr);
+  DOMStringPtr  Namespaces::s_xsiStrPtr                          = &s_xsiStr; 
+  DOMStringPtr  Namespaces::s_xsiUriPtr                          = &s_xsiUri;
+  DOMStringPtr  Namespaces::s_xsiTypeStrPtr                      = &s_xsiTypeStr; 
+  DOMStringPtr  Namespaces::s_xsiNilStrPtr                       = &s_xsiNilStr;
+  DOMStringPtr  Namespaces::s_xsiSchemaLocationStrPtr            = &s_xsiSchemaLocationStr;
+  DOMStringPtr  Namespaces::s_xsiNoNamespaceSchemaLocationStrPtr = &s_xsiNoNamespaceSchemaLocationStr;
 
 }
 

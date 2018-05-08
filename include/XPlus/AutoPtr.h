@@ -11,6 +11,7 @@
 //
 // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
 // and Contributors.
+// Copyright (c) 2018 Akamai Technologies Inc.
 //
 // Permission is hereby granted, free of charge, to any person or organization
 // obtaining a copy of the software and accompanying documentation covered by
@@ -44,6 +45,7 @@
 #include "XPlus/Exception.h"
 #include <algorithm>
 
+#include "XPlus/UString.h"
 
 namespace XPlus {
 
@@ -109,10 +111,7 @@ namespace XPlus {
           if (_ptr) _ptr->duplicate();
         }
 
-        ~AutoPtr()
-        {
-          if (_ptr) _ptr->release();
-        }
+        ~AutoPtr();
 
         AutoPtr& assign(C* ptr)
         {
@@ -355,6 +354,17 @@ namespace XPlus {
         C* _ptr;
     };
 
+  // UStrings don't implement duplicate and release, so consumers are
+  // responsible for their own memory management.  To facilitate this,
+  // skip calling release at all so that objects and their pointers
+  // can be deleted at static scope without regard to execution order.
+  template <> inline AutoPtr<UString>::~AutoPtr() { }
+
+  template <class C>
+    inline AutoPtr<C>::~AutoPtr()
+    {
+      if (_ptr) _ptr->release();
+    }
 
   template <class C>
     inline void swap(AutoPtr<C>& p1, AutoPtr<C>& p2)

@@ -270,7 +270,7 @@ namespace XMLSchema
         // edit existing-text at a position( position among text
         // inside anyComplexType)
         void replaceTextAt(DOMString text, int pos) {
-          _textNodes.at(pos)->setNodeValue(new DOMString(text));
+          _textNodes.at(pos)->setNodeValue(_textNodes.at(pos)->adopt(text));
         }
 
         // pos: position among all nodes inside anyComplexType

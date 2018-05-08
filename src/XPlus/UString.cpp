@@ -1,7 +1,7 @@
 // This file is part of XmlPlus package
 // 
 // Copyright (C)   2010-2013   Satya Prakash Tripathi
-//
+// Copyright (C)   2018        Akamai Technologies, Inc
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE VERSION 3 as published by
@@ -17,8 +17,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
 #include "XPlus/UString.h"
+
+using namespace std;
 
 namespace UTF8FNS 
 {
@@ -328,6 +329,19 @@ namespace XPlus
 #endif 
   }
 
+  // XXX move to some other source file
+  UString* XPlusObject::adopt(const UString &str) {
+    _adoptedStrings.push_back(new UString(str));
+    return _adoptedStrings.back();
+  }
+
+  XPlusObject::~XPlusObject() {
+    for (vector<UString *>::const_iterator it = _adoptedStrings.begin();
+         it != _adoptedStrings.end(); ++it)
+    {
+      delete *it;
+    }
+  }
 
 
 }

@@ -1680,7 +1680,8 @@ namespace Types
 
   MEMBER_FN <xsl:value-of select="$cppTypeSmartPtrShort_nsLevel1"/><xsl:text> </xsl:text><xsl:value-of select="$cppNSDerefLevel1Onwards"/>create_<xsl:value-of select="$cppNameFunction"/>(FSM::FsmCbOptions&amp; options)
   {
-    static DOMStringPtr myName = new DOMString("<xsl:value-of select="$elemAttrName"/>");
+    static DOMString myNameBuf("<xsl:value-of select="$elemAttrName"/>");
+    DOMStringPtr myName = &amp;myNameBuf;
     static DOMStringPtr myNsUri = <xsl:call-template name="T_get_cppPtr_targetNsUri_ElementAttr"/>;
     <xsl:choose>
       <xsl:when test="local-name()='element'">

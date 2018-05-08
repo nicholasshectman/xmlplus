@@ -269,11 +269,11 @@ void DOMParser::onCDATAEnd(void *userData)
 #endif
   
   DOMString text = this->getCDATABuffer();
-  DOMStringPtr textPtr = new DOMString(text);
   if(_docNode->stateful() && _docNode->getCurrentElement())
   {
     if(text.length() > 0)
     {
+      DOMStringPtr textPtr = new DOMString(text);
       CDATASection* cdataNode = _docNode->getCurrentElement()->createCDATASection(textPtr);
       //CDATASection* cdataNode = _docNode->createCDATASection(textPtr);
       if(!cdataNode) {
@@ -283,6 +283,7 @@ void DOMParser::onCDATAEnd(void *userData)
   }
   else 
   {
+    DOMStringPtr textPtr = new DOMString(text);
     CDATASection* cdataNode = _docNode->createCDATASection(textPtr);
   }
 

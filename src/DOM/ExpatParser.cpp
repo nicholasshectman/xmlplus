@@ -63,7 +63,7 @@ namespace ExpatCB
 
 
   //tripletStr: [nsUri|] localName [|nsPrefix]
-  DOM::NodeNSTriplet getNSTriplet(DOM::DOMString tripletStr)
+  DOM::NodeNSTriplet getNSTriplet(ExpatParser *parser, DOM::DOMString tripletStr)
   {
     DOM::DOMStringP nsUri = NULL;
     DOM::DOMStringP nsPrefix = NULL;
@@ -77,16 +77,16 @@ namespace ExpatCB
       //TODO: throw exception
     }
     if(tokens.size() == 3 ) {
-      nsUri = new DOM::DOMString(tokens[0]);
-      localName = new DOM::DOMString(tokens[1]);
-      nsPrefix = new DOM::DOMString(tokens[2]);
+      nsUri = parser->adopt(tokens[0]);
+      localName = parser->adopt(tokens[1]);
+      nsPrefix = parser->adopt(tokens[2]);
     }
     else if(tokens.size() == 2 ) {
-      nsUri = new DOM::DOMString(tokens[0]);
-      localName = new DOM::DOMString(tokens[1]);
+      nsUri = parser->adopt(tokens[0]);
+      localName = parser->adopt(tokens[1]);
     }
     else {
-      localName = new DOM::DOMString(tokens[0]);
+      localName = parser->adopt(tokens[0]);
     }
     return DOM::NodeNSTriplet(nsUri, nsPrefix, localName);
   }
@@ -101,14 +101,14 @@ namespace ExpatCB
     ParserUserData *parserUserData = (ParserUserData *)userData;
     ExpatParser *parser = parserUserData->parser;
     
-    DOM::NodeNSTriplet nsTriplet = getNSTriplet(DOM::DOMString(name));
+    DOM::NodeNSTriplet nsTriplet = getNSTriplet(parser, DOM::DOMString(name));
 
     /*
     parser->onElementStart(parserUserData->userData, nsTriplet); 
 
     for (int i = 0; atts[i]; i += 2) 
     {
-      DOM::NodeNSTriplet nsTripletAttr = getNSTriplet(DOM::DOMString(atts[i]));
+      DOM::NodeNSTriplet nsTripletAttr = getNSTriplet(parser, DOM::DOMString(atts[i]));
       parser->onAttribute(parserUserData->userData, 
                           nsTripletAttr,
                           new DOM::DOMString(atts[i+1])
@@ -119,11 +119,11 @@ namespace ExpatCB
     vector<DOM::AttributeInfo> attrVec;
     for (int i = 0; atts[i]; i += 2) 
     {
-      DOM::NodeNSTriplet nsTripletAttr = getNSTriplet(DOM::DOMString(atts[i]));
+      DOM::NodeNSTriplet nsTripletAttr = getNSTriplet(parser, DOM::DOMString(atts[i]));
       DOM::AttributeInfo attrInfo(  const_cast<DOM::DOMString *>(nsTripletAttr.nsUri()), 
                                     const_cast<DOM::DOMString *>(nsTripletAttr.nsPrefix()), 
                                     const_cast<DOM::DOMString *>(nsTripletAttr.localName()), 
-                                    new DOM::DOMString(atts[i+1]));
+                                    parser->adopt(atts[i+1]));
       attrVec.push_back(attrInfo);
     }
 
@@ -141,7 +141,7 @@ namespace ExpatCB
     ParserUserData *parserUserData = (ParserUserData *)userData;
     ExpatParser *parser = parserUserData->parser;
 
-    DOM::NodeNSTriplet nsTriplet = getNSTriplet(name);
+    DOM::NodeNSTriplet nsTriplet = getNSTriplet(parser, name);
     parser->onElementEnd(parserUserData->userData, nsTriplet); 
   }
 
@@ -152,11 +152,10 @@ namespace ExpatCB
     if(!userData) {
       return;
     }
-    DOM::DOMStringPtr nsUri = ((uri) ? new DOM::DOMString(uri): NULL);
-    DOM::DOMStringPtr nsPrefix = ((prefix) ? new DOM::DOMString(prefix): NULL);
-
     ParserUserData *parserUserData = (ParserUserData *)userData;
     ExpatParser *parser = parserUserData->parser;
+    DOM::DOMStringPtr nsUri = ((uri) ? parser->adopt(uri): NULL);
+    DOM::DOMStringPtr nsPrefix = ((prefix) ? parser->adopt(prefix): NULL);
     parser->onNamespaceStart(parserUserData->userData, nsPrefix, nsUri);
   }
 
@@ -166,9 +165,9 @@ namespace ExpatCB
     if(!userData) {
       return;
     }
-    DOM::DOMStringPtr nsPrefix = ((prefix) ? new DOM::DOMString(prefix): NULL);
     ParserUserData *parserUserData = (ParserUserData *)userData;
     ExpatParser *parser = parserUserData->parser;
+    DOM::DOMStringPtr nsPrefix = ((prefix) ? parser->adopt(prefix): NULL);
     parser->onNamespaceEnd(parserUserData->userData, nsPrefix); 
   }
 
@@ -181,11 +180,11 @@ namespace ExpatCB
     if(!userData) {
       return;
     }
-    DOM::DOMStringPtr doctypeNamePtr = ((doctypeName) ? new DOM::DOMString(doctypeName): NULL);
-    DOM::DOMStringPtr sysidPtr = ((sysid) ? new DOM::DOMString(sysid): NULL);
-    DOM::DOMStringPtr pubidPtr = ((pubid) ? new DOM::DOMString(pubid): NULL);
     ParserUserData *parserUserData = (ParserUserData *)userData;
     ExpatParser *parser = parserUserData->parser;
+    DOM::DOMStringPtr doctypeNamePtr = ((doctypeName) ? parser->adopt(doctypeName): NULL);
+    DOM::DOMStringPtr sysidPtr = ((sysid) ? parser->adopt(sysid): NULL);
+    DOM::DOMStringPtr pubidPtr = ((pubid) ? parser->adopt(pubid): NULL);
     parser->onDocTypeStart(parserUserData->userData,doctypeNamePtr, sysidPtr, pubidPtr, has_internal_subset); 
   }
 
@@ -226,10 +225,10 @@ namespace ExpatCB
     if(!userData) {
       return;
     }
-    DOM::DOMStringPtr targetStr = ((target) ? new DOM::DOMString(target): NULL);
-    DOM::DOMStringPtr dataStr = ((data) ? new DOM::DOMString(data): NULL);
     ParserUserData *parserUserData = (ParserUserData *)userData;
     ExpatParser *parser = parserUserData->parser;
+    DOM::DOMStringPtr targetStr = ((target) ? parser->adopt(target): NULL);
+    DOM::DOMStringPtr dataStr = ((data) ? parser->adopt(data): NULL);
     parser->onPI(parserUserData->userData, targetStr, dataStr); 
   }
 
@@ -238,9 +237,9 @@ namespace ExpatCB
     if(!userData) {
       return;
     }
-    DOM::DOMStringPtr charBuffStr = ((charBuff) ? new DOM::DOMString(charBuff, len): NULL);
     ParserUserData *parserUserData = (ParserUserData *)userData;
     ExpatParser *parser = parserUserData->parser;
+    DOM::DOMStringPtr charBuffStr = ((charBuff) ? parser->adopt(DOM::DOMString(charBuff, len)): NULL);
     parser->onCharacterData(parserUserData->userData, charBuffStr);
   }
 
@@ -249,9 +248,9 @@ namespace ExpatCB
     if(!userData) {
       return;
     }
-    DOM::DOMStringPtr dataStr = ((data) ? new DOM::DOMString(data): NULL);
     ParserUserData *parserUserData = (ParserUserData *)userData;
     ExpatParser *parser = parserUserData->parser;
+    DOM::DOMStringPtr dataStr = ((data) ? parser->adopt(DOM::DOMString(data)): NULL);
     parser->onComment(parserUserData->userData, dataStr);
   }
 }

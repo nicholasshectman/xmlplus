@@ -271,7 +271,7 @@ namespace XMLSchema
 
       if(pos == -1) 
       {
-        txtNode = this->ownerNode()->createChildTextNode(new DOMString(text));
+        txtNode = this->ownerNode()->createChildTextNode(adopt(text));
         if(!txtNode) {
           ostringstream err;
           err << "anyType: failed to add Text Node";
@@ -283,7 +283,7 @@ namespace XMLSchema
       }
       else 
       {
-        txtNode = this->ownerNode()->createChildTextNodeAt(new DOMString(text), pos);
+        txtNode = this->ownerNode()->createChildTextNodeAt(adopt(text), pos);
         if(!txtNode)
         {
           ostringstream err;
@@ -318,7 +318,7 @@ namespace XMLSchema
         err << "can not set text in an ComplexType without an owner parent-node";
         throw LogicalError(err.str());
       }
-      DOM::TextNode *txtNode = this->ownerNode()->createChildTextNodeAfterNode(new DOMString(text), refNode);
+      DOM::TextNode *txtNode = this->ownerNode()->createChildTextNodeAfterNode(adopt(text), refNode);
       if(!txtNode) {
         ostringstream err;
         err << "anyType: failed to add Text Node";
@@ -360,19 +360,19 @@ namespace XMLSchema
       TextNode* valueNode = NULL;
       if(_textNodes.size() == 0) {
         if(this->ownerNode()) {
-          DOMStringPtr valuePtr = new DOMString(value); // XXX
-          valueNode = this->ownerNode()->createChildTextNode(valuePtr);
+          valueNode = this->ownerNode()->createChildTextNode(adopt(value));
         } else {
           // this textNode would not get added to DOM ... heppens in following cases:
           // - SimpleTypeListTmpl::stringValue -- harmless here
           // - ...
-          DOMStringPtr valuePtr = new DOMString(value); // XXX
+          DOMStringPtr valuePtr = new DOMString(value);
           valueNode = new TextNode(valuePtr, this->ownerDocument(), NULL);
+          valueNode->adopt(valuePtr);
         }
         _textNodes.push_back(valueNode);
       } else if(_textNodes.size() == 1) {
         valueNode = _textNodes.at(0);
-        DOMStringPtr valuePtr = new DOMString(value); // XXX
+        DOMStringPtr valuePtr = adopt(value);
         valueNode->setNodeValue(valuePtr);
       } else { // _textNodes.size() > 1
         // TODO: should this new node be added to end of DOM children ??
@@ -388,7 +388,7 @@ namespace XMLSchema
         _textNodes.erase(++it, _textNodes.end());
 
         valueNode = _textNodes.at(0);
-        DOMStringPtr valuePtr = new DOMString(value); // XXX
+        DOMStringPtr valuePtr = adopt(value);
         valueNode->setNodeValue(valuePtr);
       }
 

@@ -31,7 +31,7 @@ namespace DOM
                       DOMImplementation*  implementation
                     ):
     XPlusObject("Document"),                
-    Node(new DOMString("#document"), Node::DOCUMENT_NODE, NULL, NULL, NULL, NULL, NULL),
+    Node(adopt("#document"), Node::DOCUMENT_NODE, NULL, NULL, NULL, NULL, NULL),
     _doctype(doctype),
     _implementation(implementation),
     _attributeDefaultQualified(false),
@@ -103,7 +103,7 @@ namespace DOM
     vector<XPlus::UString> tokens;
     qualifiedName->tokenize(":", tokens);
     poco_assert(tokens.size()==2);
-    return createElementNS(nsUri, new DOMString(tokens[0]), new DOMString(tokens[1]));
+    return createElementNS(nsUri, adopt(tokens[0]), adopt(tokens[1]));
   }
       
   Element* Document::createElementWithAttributes(DOMString* nsUri, DOMString* nsPrefix, DOMString* localName, vector<AttributeInfo>& attrVec)

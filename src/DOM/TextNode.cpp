@@ -29,7 +29,7 @@ namespace DOM
       Node* prevSibling
       ):
     XPlusObject("TextNode"),  
-    CharacterData(new DOMString("#text"), Node::TEXT_NODE, nodeValue, ownerDocument, parentNode, prevSibling)
+    CharacterData(adopt("#text"), Node::TEXT_NODE, nodeValue, ownerDocument, parentNode, prevSibling)
   {
   }
 
