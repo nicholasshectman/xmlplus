@@ -76,6 +76,7 @@ libxsdall_la_SOURCES = \
   XPlus/StringUtils.cpp \
   XPlus/TextEncoding.cpp \
   XPlus/UString.cpp \
+  XPlus/XPlusObject.cpp \
   \
   DOM/Attribute.cpp \
   DOM/CDATASection.cpp \

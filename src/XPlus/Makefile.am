@@ -14,6 +14,7 @@ libxplus_la_SOURCES = \
   Namespaces.cpp \
   StringUtils.cpp \
   UString.cpp \
+  XPlusObject.cpp \
   ConvertUTF.c
 
 bin_PROGRAMS=xplusTest
